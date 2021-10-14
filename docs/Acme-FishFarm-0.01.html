@@ -1,0 +1,224 @@
+<?xml version="1.0" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>Acme::FishFarm - A fish farm that has automated systems</title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<link rev="made" href="mailto:root@localhost" />
+</head>
+
+<body>
+
+
+
+<ul id="index">
+  <li><a href="#NAME">NAME</a></li>
+  <li><a href="#VERSION">VERSION</a></li>
+  <li><a href="#SYNOPSIS">SYNOPSIS</a></li>
+  <li><a href="#EXPORT">EXPORT</a></li>
+  <li><a href="#CREATION-RELATED-METHODS">CREATION RELATED METHODS</a>
+    <ul>
+      <li><a href="#new">new ()</a></li>
+      <li><a href="#install-systems">install ( systems =&gt; [...] )</a></li>
+      <li><a href="#install_all_systems">install_all_systems ()</a></li>
+    </ul>
+  </li>
+  <li><a href="#WATER-LEVEL-MAINTAINER-SUBROUTINES-METHODS">WATER LEVEL MAINTAINER SUBROUTINES/METHODS</a>
+    <ul>
+      <li><a href="#check_water_level">check_water_level ()</a></li>
+    </ul>
+  </li>
+  <li><a href="#AUTOMATED-FEEDER-SUBROUTINES-METHODS">AUTOMATED FEEDER SUBROUTINES/METHODS</a>
+    <ul>
+      <li><a href="#check_feeder-maybe-for-refilling">check_feeder () ??? maybe for refilling :)</a></li>
+    </ul>
+  </li>
+  <li><a href="#WATER-FILTRATION-SUBROUTINES-METHODS">WATER FILTRATION SUBROUTINES/METHODS</a>
+    <ul>
+      <li><a href="#check_water_filter-maybe-just-to-inspect-for-fun">check_water_filter () ??? maybe just to inspect for fun :)</a></li>
+    </ul>
+  </li>
+  <li><a href="#WATER-CONDITION-MONITORING-SUBROUTINES-METHODS">WATER CONDITION MONITORING SUBROUTINES/METHODS</a>
+    <ul>
+      <li><a href="#check_water_monitor">check_water_monitor ()</a></li>
+    </ul>
+  </li>
+  <li><a href="#OXYGEN-LEVEL-MAINTAINER-SUBROUTINES-METHODS">OXYGEN LEVEL MAINTAINER SUBROUTINES/METHODS</a>
+    <ul>
+      <li><a href="#check_oxygen_level">check_oxygen_level ()</a></li>
+    </ul>
+  </li>
+  <li><a href="#AUTHOR">AUTHOR</a></li>
+  <li><a href="#BUGS">BUGS</a></li>
+  <li><a href="#SUPPORT">SUPPORT</a></li>
+  <li><a href="#ACKNOWLEDGEMENTS">ACKNOWLEDGEMENTS</a></li>
+  <li><a href="#LICENSE-AND-COPYRIGHT">LICENSE AND COPYRIGHT</a></li>
+</ul>
+
+<h1 id="NAME">NAME</h1>
+
+<p>Acme::FishFarm - A fish farm that has automated systems</p>
+
+<h1 id="VERSION">VERSION</h1>
+
+<p>Version 0.01</p>
+
+<h1 id="SYNOPSIS">SYNOPSIS</h1>
+
+<pre><code>    use Acme::FishFarm;</code></pre>
+
+<h1 id="EXPORT">EXPORT</h1>
+
+<p>None by default</p>
+
+<h1 id="CREATION-RELATED-METHODS">CREATION RELATED METHODS</h1>
+
+<h2 id="new">new ()</h2>
+
+<p>Creates a new fish farm.</p>
+
+<h2 id="install-systems">install ( systems =&gt; [...] )</h2>
+
+<p>Installs the specified systems to your fish farm. This is done by setting the <code>systems</code> key.</p>
+
+<p>The values for <code>systems</code> include:</p>
+
+<ul>
+
+<li><p>water_level</p>
+
+</li>
+<li><p>feeder</p>
+
+</li>
+<li><p>water_filter</p>
+
+</li>
+<li><p>water_monitor</p>
+
+<p>#=item * oxygen_level</p>
+
+</li>
+</ul>
+
+<p>To install all the systems in one go, use the <code>install_all_systems</code> method instead.</p>
+
+<h2 id="install_all_systems">install_all_systems ()</h2>
+
+<p>Installs all the systems available in the fish farm. See <code>install</code> method for the available systems</p>
+
+<h1 id="WATER-LEVEL-MAINTAINER-SUBROUTINES-METHODS">WATER LEVEL MAINTAINER SUBROUTINES/METHODS</h1>
+
+<h2 id="check_water_level">check_water_level ()</h2>
+
+<p>Returns the current water level in your pond, tank, aquarium or whatever.</p>
+
+<h1 id="AUTOMATED-FEEDER-SUBROUTINES-METHODS">AUTOMATED FEEDER SUBROUTINES/METHODS</h1>
+
+<h2 id="check_feeder-maybe-for-refilling">check_feeder () ??? maybe for refilling :)</h2>
+
+<p>Returns the amount (volume) of fish food in the feeder.</p>
+
+<p>This is only useful if you want to see how much fish food is still there. This is not an important feature of this module</p>
+
+<h1 id="WATER-FILTRATION-SUBROUTINES-METHODS">WATER FILTRATION SUBROUTINES/METHODS</h1>
+
+<h2 id="check_water_filter-maybe-just-to-inspect-for-fun">check_water_filter () ??? maybe just to inspect for fun :)</h2>
+
+<p>Returns the amount of waste in the filtering cylinder.</p>
+
+<h1 id="WATER-CONDITION-MONITORING-SUBROUTINES-METHODS">WATER CONDITION MONITORING SUBROUTINES/METHODS</h1>
+
+<h2 id="check_water_monitor">check_water_monitor ()</h2>
+
+<p>Returns a hash of the current condition of the water. The hash will include the following keys:</p>
+
+<dl>
+
+<dt id="pH">1. pH</dt>
+<dd>
+
+<p>The values are in the range of 1-14</p>
+
+</dd>
+<dt id="temperature">2. temperature</dt>
+<dd>
+
+<p>The ranges of values are between 0 and 50 degree <b>celciuls</b></p>
+
+</dd>
+<dt id="DO">3. DO</dt>
+<dd>
+
+<p>The range of values are between 0 and 10 mg/L</p>
+
+</dd>
+<dt id="turbidity">4. turbidity</dt>
+<dd>
+
+<p>The range of values are between 0 and 300 ntu.</p>
+
+</dd>
+</dl>
+
+<h1 id="OXYGEN-LEVEL-MAINTAINER-SUBROUTINES-METHODS">OXYGEN LEVEL MAINTAINER SUBROUTINES/METHODS</h1>
+
+<h2 id="check_oxygen_level">check_oxygen_level ()</h2>
+
+<p>This is the same as checking the DO content through the <code>check_water_filter</code> method.</p>
+
+<p>Either this part of the DO part might be removed</p>
+
+<h1 id="AUTHOR">AUTHOR</h1>
+
+<p>Raphael Jong Jun Jie, <code>&lt;ellednera at cpan.org&gt;</code></p>
+
+<h1 id="BUGS">BUGS</h1>
+
+<p>Please report any bugs or feature requests to <code>bug-acme-fishfarm at rt.cpan.org</code>, or through the web interface at <a href="https://rt.cpan.org/NoAuth/ReportBug.html?Queue=Acme-FishFarm">https://rt.cpan.org/NoAuth/ReportBug.html?Queue=Acme-FishFarm</a>. I will be notified, and then you&#39;ll automatically be notified of progress on your bug as I make changes.</p>
+
+<h1 id="SUPPORT">SUPPORT</h1>
+
+<p>You can find documentation for this module with the perldoc command.</p>
+
+<pre><code>    perldoc Acme::FishFarm</code></pre>
+
+<p>You can also look for information at:</p>
+
+<ul>
+
+<li><p>RT: CPAN&#39;s request tracker (report bugs here)</p>
+
+<p><a href="https://rt.cpan.org/NoAuth/Bugs.html?Dist=Acme-FishFarm">https://rt.cpan.org/NoAuth/Bugs.html?Dist=Acme-FishFarm</a></p>
+
+</li>
+<li><p>CPAN Ratings</p>
+
+<p><a href="https://cpanratings.perl.org/d/Acme-FishFarm">https://cpanratings.perl.org/d/Acme-FishFarm</a></p>
+
+</li>
+<li><p>Search CPAN</p>
+
+<p><a href="https://metacpan.org/release/Acme-FishFarm">https://metacpan.org/release/Acme-FishFarm</a></p>
+
+</li>
+</ul>
+
+<h1 id="ACKNOWLEDGEMENTS">ACKNOWLEDGEMENTS</h1>
+
+<p>Besiyata d&#39;shmaya</p>
+
+<h1 id="LICENSE-AND-COPYRIGHT">LICENSE AND COPYRIGHT</h1>
+
+<p>This software is Copyright (c) 2021 by Raphael Jong Jun Jie.</p>
+
+<p>This is free software, licensed under:</p>
+
+<pre><code>  The Artistic License 2.0 (GPL Compatible)</code></pre>
+
+
+</body>
+
+</html>
+
+

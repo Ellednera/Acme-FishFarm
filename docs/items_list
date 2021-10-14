@@ -1,0 +1,85 @@
+Items list for Acme::FishFarm and related modules
+
+Version 0.01
+[] Acme::FishFarm
+   [v] gist
+   [] implementation
+      [] new
+      [] install (systems =>[...])
+      [] install_all_systems
+      [] check_water_leve
+      [?] check_feeder
+      [?] check_water_filte
+      [] check_water_monitor
+      [] check_oxygen_level
+      [] ...
+   [] tests
+
+[] Acme::FishFarm::Feeder
+   [] synopsis
+   [v] gist
+   [v] implementation
+      [v] CREATION
+         [v] install
+      [v] TIMER
+         [v] get_timer
+         [v] set_timer
+         [v] timer_is_up
+         [v] time_remaining
+         [v] tick_clock
+      [v] FEEDING
+         [v] food_remaining
+         [v] feed_fish
+         [v] set_feeding_volume
+         [v] feeding_volume
+         [v] refill
+   [v] tests
+
+[] Acme::FishFarm::WaterConditionMonitor
+   [v] gist
+   [] implementation
+      [] CREATION
+         [] install
+      [] WATER CONDITIONS
+         [] set_ph_threshold
+         [] ph_is_normal
+         [] set_temperature_threshold
+         [] temperature_is_normal
+         [] lacking_oxygen
+         [] water_dirty
+      [] BUZZER
+         [] buzz_short
+         [] buzz_long
+      [] LED
+         [] on_LED_pH
+         [] is_on_LED_pH
+         [] on_LED_temperature
+         [] is_on_LED_temperature
+         [] on_LED_DO
+         [] is_on_LED_DO
+         [] on_LED_turbidity
+         [] is_on_LED_turbidity
+   [] tests
+
+[] Acme::FishFarm::WaterFiltration
+   [v] gist
+   [] implementation
+      [] CREATION
+         [] install
+      [] WASTE LEVEL DETECTION
+         [] read_Waste_counter
+         [] get_waste_counter_threshold
+         [] set_waste_counter_threshold
+      [] CLEANING / SPATULA
+         [] turn_on_spatulas
+         [] turn_off_spatulas
+   [] tests
+
+[] Acme::FishFarm::WaterLevelMaintainer
+   [] gist
+   [] implementation
+   [] tests
+
+[] one more function needed :|
+
+[] export all modules' documentation to html
