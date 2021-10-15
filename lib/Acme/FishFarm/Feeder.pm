@@ -228,9 +228,6 @@ sub set_food_tank_capacity {
     $self->{food_tank_capacity} = $new_capacity;
 }
 
-
-=head1 FEEDING RELATED SUBROUTINES/METHODS
-
 =head2 food_remaining
 
 Checks the remaining of food left in C<cm^3>.
@@ -241,6 +238,8 @@ sub food_remaining {
     ref (my $self = shift) or croak "Please use this the OO way";
     $self->{current_food_amount};
 }
+
+=head1 FEEDING RELATED SUBROUTINES/METHODS
 
 =head2 feed_fish ( %options )
 

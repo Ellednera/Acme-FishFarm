@@ -15,8 +15,8 @@ Version 0.01
       [] ...
    [] tests
 
-[] Acme::FishFarm::Feeder
-   [] synopsis
+[v] Acme::FishFarm::Feeder
+   [v] synopsis
    [v] gist
    [v] implementation
       [v] CREATION
@@ -27,8 +27,11 @@ Version 0.01
          [v] timer_is_up
          [v] time_remaining
          [v] tick_clock
-      [v] FEEDING
+      [v] FOOD TANK
+         [v] food_tank_capacity
+         [v] set_food_tank_capacity
          [v] food_remaining
+      [v] FEEDING
          [v] feed_fish
          [v] set_feeding_volume
          [v] feeding_volume
