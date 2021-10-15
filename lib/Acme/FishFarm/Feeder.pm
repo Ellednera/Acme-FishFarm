@@ -21,10 +21,39 @@ our $VERSION = '0.01';
 
 =head1 SYNOPSIS
 
+    use 5.010;
     use Acme::FishFarm::Feeder;
 
-    my $foo = Acme::FishFarm::Feeder->new();
-    ...
+    my $feeder = Acme::FishFarm::Feeder->install( timer => 3, feeding_volume => 150 );
+
+    say "Feeder installed and switched on!";
+    say "";
+
+    #while (1) {
+    for (0..20){
+
+        if ( $feeder->timer_is_up ) {
+            say "\nTimer is up, time to feed the fish!";
+            say "Feeding ", $feeder->feeding_volume, " cm^3 of fish food to the fish...";
+            
+            $feeder->feed_fish;
+            
+            say $feeder->food_remaining, " cm^3 of fish food remaining in the tank.\n";
+        }
+        
+        if ( $feeder->food_remaining <=0  ) {
+            $feeder->refill; # default back to 500 cm^3
+            say "Refilled food tank back to ", $feeder->food_tank_capacity, " cm^3.\n";
+        }
+        
+        say $feeder->time_remaining, " hours left until it's time to feed the fish.";
+
+        sleep(1);
+        $feeder->tick_clock;
+    }
+
+    say "";
+    say "Feeder was switched off, please remeber to feed your fish on time :)";
 
 =head1 EXPORT
 
@@ -60,8 +89,6 @@ The maximum volume of fish food. Default is C<500 cm^3>.
 
 The initial amount of food to be filled into the food tank. Default is max ie C<500 cm^3>.
 
-
-
 =back
 
 =cut
@@ -89,6 +116,8 @@ sub install {
     if ( not $options{current_food_amount} ) {
         $options{current_food_amount} = $options{food_tank_capacity};
     }
+    
+    $options{first_usage} = 1; # make sure the feeder doesn't say timer is up as soon as it is switched on
     
     bless \%options, $class;
 }
@@ -130,6 +159,13 @@ Check if the timer is up. If timer is up, please remember to feed your fish. See
 
 sub timer_is_up {
     ref (my $self = shift) or croak "Please use this the OO way";
+    
+    # skip the first round, 0 % n is always 0 and the feeder might think it's time to feed the fish as soon as it's switched on
+    if ( $self->{first_usage} ) {
+        $self->{first_usage} = 0;
+        return 0;
+    }
+    
     if ( $self->{clock} % $self->{timer} == 0 ) {
         # reset clock to 0 and return true
         $self->{clock} = 0; # just in case the clock runs for too long
@@ -166,6 +202,33 @@ sub tick_clock {
 }
 
 
+=head1 FOOD TANK RELATED SUBROUTINE/METHODS
+
+=head2 food_tank_capacity
+
+Returns the current food tank capacity in C<cm^3>.
+
+=cut
+
+sub food_tank_capacity {
+    ref (my $self = shift) or croak "Please use this the OO way";
+    $self->{food_tank_capacity};
+}
+
+=head2 set_food_tank_capacity ( $new_capacity )
+
+Set the new food tank capacity to C<$new_capacity>.
+
+=cut
+
+sub set_food_tank_capacity {
+    no warnings "numeric";
+    ref (my $self = shift) or croak "Please use this the OO way";
+    my $new_capacity = int (shift) || return;
+    $self->{food_tank_capacity} = $new_capacity;
+}
+
+
 =head1 FEEDING RELATED SUBROUTINES/METHODS
 
 =head2 food_remaining
@@ -179,18 +242,37 @@ sub food_remaining {
     $self->{current_food_amount};
 }
 
-=head2 feed_fish
+=head2 feed_fish ( %options )
 
 Feeds the fish. This will cause the C<current_food_amount> to become less.
 
 Take note that this will feed the fish no matter what. So it's up to you to make sure that you check if the 
 feeder timer is really up or not before calling this method. See C<timer_is_up> for more info.
 
+C<%options> support the following:
+
+=over 4
+
+=item * verbose
+
+Setting this to a true value will give output about the feeder's situation when feeding the fish.
+
+=back
+
 =cut
 
 sub feed_fish {
     ref (my $self = shift) or croak "Please use this the OO way";
-    $self->{current_food_amount} = $self->{current_food_amount} - $self->{feeding_volume};
+    my %options = @_;
+    if ( $self->{current_food_amount} - $self->{feeding_volume} <= 0 ) {
+        if ( $options{verbose} ) {
+            print "Your feeder has run out of food, please refill as soon as possible.\n";
+            print "Only managed to feed $self->{current_food_amount} cm^3 of food to the fish.\n";        
+        }
+        $self->{current_food_amount} = 0;
+    } else {
+        $self->{current_food_amount} = $self->{current_food_amount} - $self->{feeding_volume};
+    }
 }
 
 =head2 set_feeding_volume ( $volume )
@@ -224,12 +306,23 @@ Refills the fish food tank B<TO> C<$volume cm^3>.
 
 If C<$volume> is not specified, the food tank will be filled to max.
 
+If C<$volume> is a strange value, it will be ignored and filled to max.
+
 =cut
 
 sub refill {
+    no warnings "numeric";
     ref (my $self = shift) or croak "Please use this the OO way";
+
     my $volume = shift || $self->{food_tank_capacity};
-    $self->{current_food_amount} = $volume;
+    return if not int($volume);
+    
+    if ( $volume > $self->{food_tank_capacity} ) {
+        $self->{current_food_amount} = $self->{food_tank_capacity};
+    } else {
+        $self->{current_food_amount} = $volume;
+    }
+    
 }
 
 =head1 AUTHOR

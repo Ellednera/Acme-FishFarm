@@ -30,10 +30,16 @@
       <li><a href="#tick_clock-custom_tick">tick_clock ( $custom_tick )</a></li>
     </ul>
   </li>
+  <li><a href="#FOOD-TANK-RELATED-SUBROUTINE-METHODS">FOOD TANK RELATED SUBROUTINE/METHODS</a>
+    <ul>
+      <li><a href="#food_tank_capacity">food_tank_capacity</a></li>
+      <li><a href="#set_food_tank_capacity-new_capacity">set_food_tank_capacity ( $new_capacity )</a></li>
+    </ul>
+  </li>
   <li><a href="#FEEDING-RELATED-SUBROUTINES-METHODS">FEEDING RELATED SUBROUTINES/METHODS</a>
     <ul>
       <li><a href="#food_remaining">food_remaining</a></li>
-      <li><a href="#feed_fish">feed_fish</a></li>
+      <li><a href="#feed_fish-options">feed_fish ( %options )</a></li>
       <li><a href="#set_feeding_volume-volume">set_feeding_volume ( $volume )</a></li>
       <li><a href="#feeding_volume">feeding_volume</a></li>
       <li><a href="#refill-volume">refill ( $volume )</a></li>
@@ -56,10 +62,39 @@
 
 <h1 id="SYNOPSIS">SYNOPSIS</h1>
 
-<pre><code>    use Acme::FishFarm::Feeder;
+<pre><code>    use 5.010;
+    use Acme::FishFarm::Feeder;
 
-    my $foo = Acme::FishFarm::Feeder-&gt;new();
-    ...</code></pre>
+    my $feeder = Acme::FishFarm::Feeder-&gt;install( timer =&gt; 3, feeding_volume =&gt; 150 );
+
+    say &quot;Feeder installed and switched on!&quot;;
+    say &quot;&quot;;
+
+    #while (1) {
+    for (0..20){
+
+        if ( $feeder-&gt;timer_is_up ) {
+            say &quot;\nTimer is up, time to feed the fish!&quot;;
+            say &quot;Feeding &quot;, $feeder-&gt;feeding_volume, &quot; cm^3 of fish food to the fish...&quot;;
+            
+            $feeder-&gt;feed_fish;
+            
+            say $feeder-&gt;food_remaining, &quot; cm^3 of fish food remaining in the tank.\n&quot;;
+        }
+        
+        if ( $feeder-&gt;food_remaining &lt;=0  ) {
+            $feeder-&gt;refill; # default back to 500 cm^3
+            say &quot;Refilled food tank back to &quot;, $feeder-&gt;food_tank_capacity, &quot; cm^3.\n&quot;;
+        }
+        
+        say $feeder-&gt;time_remaining, &quot; hours left until it&#39;s time to feed the fish.&quot;;
+
+        sleep(1);
+        $feeder-&gt;tick_clock;
+    }
+
+    say &quot;&quot;;
+    say &quot;Feeder was switched off, please remeber to feed your fish on time :)&quot;;</code></pre>
 
 <h1 id="EXPORT">EXPORT</h1>
 
@@ -129,17 +164,38 @@
 
 <p>This will cause the timer of the feeder to increase by <code>1</code> hour (default) or by <code>$custom_tick</code> hours.</p>
 
+<h1 id="FOOD-TANK-RELATED-SUBROUTINE-METHODS">FOOD TANK RELATED SUBROUTINE/METHODS</h1>
+
+<h2 id="food_tank_capacity">food_tank_capacity</h2>
+
+<p>Returns the current food tank capacity in <code>cm^3</code>.</p>
+
+<h2 id="set_food_tank_capacity-new_capacity">set_food_tank_capacity ( $new_capacity )</h2>
+
+<p>Set the new food tank capacity to <code>$new_capacity</code>.</p>
+
 <h1 id="FEEDING-RELATED-SUBROUTINES-METHODS">FEEDING RELATED SUBROUTINES/METHODS</h1>
 
 <h2 id="food_remaining">food_remaining</h2>
 
 <p>Checks the remaining of food left in <code>cm^3</code>.</p>
 
-<h2 id="feed_fish">feed_fish</h2>
+<h2 id="feed_fish-options">feed_fish ( %options )</h2>
 
 <p>Feeds the fish. This will cause the <code>current_food_amount</code> to become less.</p>
 
 <p>Take note that this will feed the fish no matter what. So it&#39;s up to you to make sure that you check if the feeder timer is really up or not before calling this method. See <code>timer_is_up</code> for more info.</p>
+
+<p><code>%options</code> support the following:</p>
+
+<ul>
+
+<li><p>verbose</p>
+
+<p>Setting this to a true value will give output about the feeder&#39;s situation when feeding the fish.</p>
+
+</li>
+</ul>
 
 <h2 id="set_feeding_volume-volume">set_feeding_volume ( $volume )</h2>
 
@@ -156,6 +212,8 @@
 <p>Refills the fish food tank <b>TO</b> <code>$volume cm^3</code>.</p>
 
 <p>If <code>$volume</code> is not specified, the food tank will be filled to max.</p>
+
+<p>If <code>$volume</code> is a strange value, it will be ignored and filled to max.</p>
 
 <h1 id="AUTHOR">AUTHOR</h1>
 
