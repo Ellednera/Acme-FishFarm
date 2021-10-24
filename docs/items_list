@@ -51,8 +51,10 @@ Version 0.01
          [] lacking_oxygen
          [] water_dirty
       [] BUZZER
-         [] buzz_short
-         [] buzz_long
+         [] on_buzzer_short
+         [] is_on_buzzer_short
+         [] on_buzzer_long
+         [] is_on_buzzer_long
       [] LED
          [] on_LED_pH
          [] is_on_LED_pH
@@ -73,6 +75,7 @@ Version 0.01
          [] read_waste_counter
          [] waste_counter_threshold
          [] set_waste_counter_threshold
+         [] water_is_dirty
       [] CLEANING / SPATULA
          [] turn_on_spatulas
          [] turn_off_spatulas
