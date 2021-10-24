@@ -18,7 +18,7 @@ for (0..20){
         say "\nTimer is up, time to feed the fish!";
         say "Feeding ", $feeder->feeding_volume, " cm^3 of fish food to the fish...";
         
-        $feeder->feed_fish;
+        $feeder->feed_fish ( verbose => 1 );
         
         say $feeder->food_remaining, " cm^3 of fish food remaining in the tank.\n";
     }
