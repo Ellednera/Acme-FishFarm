@@ -15,6 +15,7 @@ the automated systems used in aquaculture. Those other modules are:
 2. Acme::FishFarm::WaterFiltration
 3. Acme::FishFarm::WaterLevelMaintainer
 4. Acme::FishFarm::WaterConditionMonitor
+5. Acme::FishFarm::OxygenMaintainer
 
 The documentations for all these modules can be found in the docs directory together with 
 the specifications if you're interested :)
