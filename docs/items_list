@@ -9,7 +9,7 @@ Version 0.01
       [] install_all_systems
       [] check_water_leve
       [?] check_feeder
-      [?] check_water_filte
+      [?] check_water_filter
       [] check_water_monitor
       [] check_oxygen_level
       [] ...
@@ -70,8 +70,8 @@ Version 0.01
       [] CREATION
          [] install
       [] WASTE LEVEL DETECTION
-         [] read_Waste_counter
-         [] get_waste_counter_threshold
+         [] read_waste_counter
+         [] waste_counter_threshold
          [] set_waste_counter_threshold
       [] CLEANING / SPATULA
          [] turn_on_spatulas
@@ -81,8 +81,34 @@ Version 0.01
 [] Acme::FishFarm::WaterLevelMaintainer
    [] gist
    [] implementation
+      [] CREATION
+         [] install
+      [] WATER LEVEL DETECTION
+         [] current_water_level
+         [] set_water_level
+         [] low_water_level_threshold
+         [] set_low_water_level_threshold
+         [] is_low_water_level
+      [] PUMPS
+         [] pumping_volume
+         [] set_pumping_volume
+         [] pump_water_in
    [] tests
-
-[] one more function needed :|
+   
+[] Acme::FishFarm::OxygenMaintainer
+   [] gist
+   [] implementation
+      [] CREATION
+      [] DISSOLVED OXYGEN SENSOR
+         [] current_DO_level
+         [] set_DO_level
+         [] low_DO_level_threshold
+         [] set_low_DO_level_threshold
+         [] is_low_DO_level
+      [] OXYGEN GENERATION
+         [] oxygen_generation_volume
+         [] set_oxygen_generation_volume
+         [] generate_oxygen
+   [] tests
 
 [] export all modules' documentation to html
