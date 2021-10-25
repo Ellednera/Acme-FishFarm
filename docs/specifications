@@ -28,6 +28,8 @@ Only allow installation of a system once, however, make it changable
       * oxygen needs to be generated constantly if DO is lower than threshold
     - Acme::FishFarm::WaterLevelMaintainer
       * water needs to be pumped constantly if water level is lower than threshold
+    - Acme::FishFarm::WaterConditionMonitor
+      * the long buzzer needs to be turned on explicitely
 There's really no obvious reason why this is so, it's just what and how I want the method names to be :)
 
 3. Actual script:

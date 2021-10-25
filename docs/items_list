@@ -41,29 +41,41 @@ Version 0.01
 [] Acme::FishFarm::WaterConditionMonitor
    [v] gist
    [] implementation
-      [] CREATION
-         [] install
-      [] WATER CONDITIONS
-         [] set_ph_threshold
-         [] ph_is_normal
-         [] set_temperature_threshold
-         [] temperature_is_normal
+      [v] CREATION
+         [v] install
+         [] add_oxygen_maintainer
+      [v] WATER CONDITIONS
+         [v] current_ph - get & set
+         [v] ph_treshold
+         [v] set_ph_threshold
+         [v] ph_is_normal
+
+         [v] current_temperature - get & set
+         [v] temperature_threshold
+         [v] set_temperature_threshold
+         [v] temperature_is_normal
+
          [] lacking_oxygen
+
+         [] current_turbidity - get & set
+         [] turbidity_threshold
+         [] set_turbidity_threshold
          [] water_dirty
-      [] BUZZER
-         [] on_buzzer_short
-         [] is_on_buzzer_short
-         [] on_buzzer_long
-         [] is_on_buzzer_long
+      [v] BUZZER
+         [v] on_buzzer_short
+         [v] is_on_buzzer_short
+         [v] on_buzzer_long
+         [v] is_on_buzzer_long
       [] LED
-         [] on_LED_pH
-         [] is_on_LED_pH
-         [] on_LED_temperature
-         [] is_on_LED_temperature
+         [v] on_LED_pH
+         [v] is_on_LED_pH
+         [v] on_LED_temperature
+         [v] is_on_LED_temperature
          [] on_LED_DO
          [] is_on_LED_DO
          [] on_LED_turbidity
          [] is_on_LED_turbidity
+         [v] lighted_LED_count
    [] tests
 
 [] Acme::FishFarm::WaterFiltration
