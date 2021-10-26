@@ -283,15 +283,39 @@ C<$new_turbidity> is optional. If present, the current turbidity will be set to 
 
 =cut
 
-sub current_turbidity {...}
+sub current_turbidity {
+    ref( my $self = shift ) or croak "Please use this the OO way";
+    
+    if ( @_ ) {
+        $self->{current_turbidity} = shift;
+    } else {
+        $self->{current_turbidity};
+    }
+    
+}
 
 =head2 turbidity_threshold
 
 Returns the turbidity threshold.
 
+=cut
+
+sub turbidity_threshold {
+    ref( my $self = shift ) or croak "Please use this the OO way";
+    $self->{turbidity_threshold};
+}
+
 =head2 set_turbidity_threshold ( $new_turbidity_threshold )
 
 Sets the turbidity threshold to C<$new_turbidity_threshold>.
+
+=cut
+
+sub set_turbidity_threshold {
+    ref( my $self = shift ) or croak "Please use this the OO way";
+
+    $self->{turbidity_threshold} = shift;
+}
 
 =head2 water_dirty ()
 
@@ -299,7 +323,29 @@ Returns true if the current turbidity is highter then the threshold.
 
 =cut
 
-sub water_dirty {...}
+sub water_dirty {
+    ref( my $self = shift ) or croak "Please use this the OO way";
+    
+    if ( $self->{current_turbidity} >= $self->{turbidity_threshold} ) {
+        
+        $self->{turbidity_LED_on} = 1;
+        $self->{lighted_LED_count}++;
+        $self->{short_buzzer_on} = 1;
+        
+        return 1;
+    } else {
+
+        # if still on, switch it off, it's normal now
+        if ( $self->{lighted_LED_count} == 1 and $self->is_on_LED_turbidity ) {
+            $self->{turbidity_LED_on} = 0;
+            $self->{lighted_LED_count}--;
+            $self->{short_buzzer_on} = 0 ; # the only one lighting up the LED
+            $self->{long_buzzer_on} = 0 if $self->{lighted_LED_count} < 2;
+        }
+        
+        return 0;
+    }
+}
 
 
 # these 2 should be wrappers of something in the future
@@ -425,9 +471,15 @@ Returns true if the LED of DO is lighted up.
 
 =cut
 
-sub on_LED_turbidity {...}
+sub on_LED_turbidity {
+    ref( my $self = shift ) or croak "Please use this the OO way";
+    $self->{turbidity_LED_on} = 1;
+}
 
-sub is_on_LED_turbidity {...}
+sub is_on_LED_turbidity {
+    ref( my $self = shift ) or croak "Please use this the OO way";
+    return $self->{turbidity_LED_on};
+}
 
 =head2 lighted_LED_count ()
 

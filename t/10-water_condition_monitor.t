@@ -28,6 +28,7 @@ is( $water_monitor->ph_is_normal, 1, "pH level is normal" );
 isnt( $water_monitor->is_on_LED_pH, 1, "pH LED is not on" );
 is( $water_monitor->is_on_buzzer_short, 0, "pH sensor not making short buzzer turn on" );
 
+
 # temperature
 my $temperature_range =  $water_monitor->temperature_threshold;
 is( $temperature_range->[0], 20, "Correct min temperature" );
@@ -65,11 +66,39 @@ is( $water_monitor->lighted_LED_count, 2, "2 LEDs lighted up" );
 # temperature and pH both not normal, long buzzer should go off
 is( $water_monitor->is_on_buzzer_long, 1, "pH and temperature caused long buzzer to go off" );
 
+# turbidity
+is( $water_monitor->current_turbidity, 10, "Correct default current turbidity");
+is( $water_monitor->turbidity_threshold, 180, "Correct default turbidity threshold");
 
+$water_monitor->set_turbidity_threshold(300);
+is( $water_monitor->turbidity_threshold, 300, "Correct new turbidity threshold");
+
+$water_monitor->current_turbidity(130);
+is( $water_monitor->current_turbidity, 130, "Correct new current turbidity");
+
+# make LED and buzzer fire
+$water_monitor->set_turbidity_threshold(100);
+is( $water_monitor->water_dirty, 1, "Water is dirty");
+
+# lighted LED shuold be 3 by now
+is( $water_monitor->is_on_LED_turbidity, 1, "Turbidity LED is on" );
+is( $water_monitor->lighted_LED_count, 3, "3 LEDs lighted up");
+
+is( $water_monitor->is_on_buzzer_short, 1, "Short buzzer on");
+is( $water_monitor->is_on_buzzer_long, 1, "3 LEDs, long buzzer still on" );
+
+# oxygen level
+# this will need the oxygen maintainer to be connected to the monitoring system
+is ($water_monitor->lacking_oxygen, 1, "Fish is lacking oxygen");
 
 done_testing;
 
 # besiyata d'shmaya
+
+
+
+
+
 
 
 
