@@ -3,7 +3,7 @@ package Acme::FishFarm::WaterConditionMonitor;
 use 5.006;
 use strict;
 use warnings;
-use Carp;
+use Carp "croak";
 
 =head1 NAME
 
@@ -27,6 +27,10 @@ our $VERSION = '0.01';
 None
 
 =head1 CREATION RELATED SUBROUTINES/METHODS
+
+Only 3 sensors are built-in. However, there is a 4th socket for the oxygen maintainer. For this socket, you'll need to manuall connect an Acme::FishFarm::OxygenMaintainer object by calling the C<add_oxygen_maintainer> method.
+
+More sockets might be available in the future.
 
 =head2 install ( %sensors )
 
@@ -53,14 +57,6 @@ This will set the threshold value of the water temperature. Please pass in an ar
 in the form of C<[min_temperature, max_temperature]>
 
 The ranges of values are between 0 and 50 degree B<celciuls>
-
-=item DO
-
-Optional. The default threshold is C<5 mg/L> and the default DO is to C<8 mg/L>.
-
-This will set the threshold value of the DO in the water.
-
-The range of values are between 0 and 10 mg/L.
 
 =item turbidity
 
@@ -90,17 +86,14 @@ sub install {
         $sensors{temperature_LED_on} = 0;
     }
     
-    if ( not $sensors{DO} ) {
-        $sensors{DO_threshold} = 5;
-        $sensors{current_DO} = 8;
-        $sensors{DO_LED_on} = 0;
-    }
-    
     if ( not $sensors{turbidity} ) {
         $sensors{turbidity_threshold} = 180;
         $sensors{current_turbidity} = 10;
         $sensors{turbidity_LED_on} = 0;
     }
+    
+    # low DO led, use Acme::FishFarm::OxygenMaintainer to determine
+    $sensors{DO_LED_on} = 0;
     
     $sensors{lighted_LED_count} = 0;
     $sensors{short_buzzer_on} = 0;
@@ -118,7 +111,14 @@ For now, this module can only check if the oxygen is lacking or not. This module
 
 =cut
 
-sub add_oxygen_maintainer {...}
+sub add_oxygen_maintainer {
+    ref( my $self = shift ) or croak "Please use this the OO way";
+    if ( ref( my $oxygen_maintainer = shift ) ne "Acme::FishFarm::OxygenMaintainer") {
+        croak "Please pass in an Acme::FishFarm::OxygenMaintainer object!";
+    } else {
+        $self->{oxygen_maintainer} = $oxygen_maintainer;
+    }
+}
 
 =head1 WATER CONDITIONS RELATED SUBROUTINES/METHODS
 
@@ -174,22 +174,19 @@ The long buzzer will not be affected, you'll need to turn it on yourself.
 
 sub ph_is_normal {
     ref( my $self = shift ) or croak "Please use this the OO way";
+
+    _tweak_buzzers( $self );
     
     if ( $self->{current_pH} >= $self->{pH_range}[0] and $self->{current_pH} <= $self->{pH_range}[1] ) {
     
         # if still on, switch it off, it's normal now
-        if ( $self->{lighted_LED_count} == 1 and $self->is_on_LED_pH ) {
+        if ( $self->is_on_LED_pH ) {
             $self->{pH_LED_on} = 0;
-            $self->{lighted_LED_count}--;
-            $self->{short_buzzer_on} = 0 ; # the only one lighting up the LED
-            $self->{long_buzzer_on} = 0 if $self->{lighted_LED_count} < 2;
         }
-    
+        
         return 1;
     } else {
         $self->{pH_LED_on} = 1;
-        $self->{lighted_LED_count}++;
-        $self->{short_buzzer_on} = 1;
         return 0;
     }
 }
@@ -246,34 +243,48 @@ Returns true if the current temperature is within the set range of threshold.
 
 sub temperature_is_normal {
     ref( my $self = shift ) or croak "Please use this the OO way";
+
+    _tweak_buzzers( $self );
     
     if ( $self->{current_temperature} >= $self->{temperature_range}[0] 
         and $self->{current_temperature} <= $self->{temperature_range}[1] ) {
         
         # if still on, switch it off, it's normal now
-        if ( $self->{lighted_LED_count} == 1 and $self->is_on_LED_temperature ) {
+        if ( $self->is_on_LED_temperature ) {
             $self->{temperature_LED_on} = 0;
-            $self->{lighted_LED_count}--;
-            $self->{short_buzzer_on} = 0 ; # the only one lighting up the LED
-            $self->{long_buzzer_on} = 0 if $self->{lighted_LED_count} < 2;
         }
         
         return 1;
     } else {
         $self->{temperature_LED_on} = 1;
-        $self->{lighted_LED_count}++;
-        $self->{short_buzzer_on} = 1;
         return 0;
     }
 }
 
-=head2 lacking_oxygen ()
+=head2 lacking_oxygen
 
 Returns true if the current DO content is lower then the threshold.
 
 =cut
 
-sub lacking_oxygen {...}
+sub lacking_oxygen {
+    ref( my $self = shift ) or croak "Please use this the OO way";
+    
+    _tweak_buzzers( $self );
+    
+    if ( $self->{oxygen_maintainer}->is_low_DO) {
+        $self->{DO_LED_on} = 1;
+        return 1;
+    } else {
+        # if still on, switch it off, it's normal now
+        if ( $self->is_on_LED_DO ) {
+            $self->{DO_LED_on} = 0;
+        }
+        
+        return 0;
+    }
+    
+}
 
 =head2 current_turbidity ( $new_turbidity )
 
@@ -326,21 +337,17 @@ Returns true if the current turbidity is highter then the threshold.
 sub water_dirty {
     ref( my $self = shift ) or croak "Please use this the OO way";
     
+    _tweak_buzzers( $self );
+    
     if ( $self->{current_turbidity} >= $self->{turbidity_threshold} ) {
         
         $self->{turbidity_LED_on} = 1;
-        $self->{lighted_LED_count}++;
-        $self->{short_buzzer_on} = 1;
-        
         return 1;
     } else {
 
         # if still on, switch it off, it's normal now
-        if ( $self->{lighted_LED_count} == 1 and $self->is_on_LED_turbidity ) {
+        if ( $self->is_on_LED_turbidity ) {
             $self->{turbidity_LED_on} = 0;
-            $self->{lighted_LED_count}--;
-            $self->{short_buzzer_on} = 0 ; # the only one lighting up the LED
-            $self->{long_buzzer_on} = 0 if $self->{lighted_LED_count} < 2;
         }
         
         return 0;
@@ -351,52 +358,64 @@ sub water_dirty {
 # these 2 should be wrappers of something in the future
 =head1 BUZZER RELATED SUBROUTINES/METHODS
 
-=head2 on_buzzer_short ()
-
-Makes the buzzer buzz for a while if only one LED is lighted up.
-
-=cut
-
-sub on_buzzer_short {
-    ref( my $self = shift ) or croak "Please use this the OO way";
-    $self->{short_buzzer_on} = 1;
-}
-
 =head2 is_on_buzzer_short ()
 
 Returns true if the short buzzer is turned on.
+
+A short buzzer will buzz if there is 1 abnormal condition. If more than 1 abnormal conditions are present, the long buzzer will be turned on and this short buzzer will be turned off so that it's not too noisy :)
 
 =cut
 
 sub is_on_buzzer_short {
     ref( my $self = shift ) or croak "Please use this the OO way";
-    $self->{short_buzzer_on};
+    _tweak_buzzers( $self );
+    return $self->{short_buzzer_on};
 }
 
-=head2 on_buzzer_long ()
-
-Makes the buzzer buzz infinitely until less than 2 LEDs are lighted up.
-
-=cut
-
-sub on_buzzer_long {
-    ref( my $self = shift ) or croak "Please use this the OO way";
-    $self->{long_buzzer_on} = 1;
-}
 
 =head2 is_on_buzzer_long ()
 
-Returns true if the long buzzer is turned on.
+Returns true if the long buzzer is turned on and also turns off the short buzzer to reduce noise.
 
 =cut
 
 sub is_on_buzzer_long {
     ref( my $self = shift ) or croak "Please use this the OO way";
-    if ( $self->{lighted_LED_count} > 1 ) {
-        $self->{long_buzzer_on} = 1; # this seems pretty useless
-        1;
+    _tweak_buzzers( $self );
+    return $self->{long_buzzer_on};
+}
+
+=over 4
+
+=item &_tweak_buzzers ( $self )
+
+Tweak the buzzers. It's either the short buzzer or the long buzzer switched on only.
+
+=back
+
+=cut
+
+sub _tweak_buzzers {
+    ref( my $self = shift ) or croak "Please use this the OO way";
+    
+    # short buzzer
+    if ( $self->lighted_LED_count == 1 ) {
+        $self->{short_buzzer_on} = 1;
+        $self->{long_buzzer_on} = 0;
+        
+    # long buzzer
+    } elsif ( $self->lighted_LED_count > 1 ) {
+        $self->{short_buzzer_on} = 0;
+        $self->{long_buzzer_on} = 1;
+        
+    # no buzzer
+    } elsif ( $self->lighted_LED_count == 0 ) {
+        $self->{short_buzzer_on} = 0;
+        $self->{long_buzzer_on} = 0;
+        
+    # somthing's wrong
     } else {
-        0;
+        die "Something's wrong with LED count";
     }
 }
 
@@ -447,9 +466,7 @@ sub is_on_LED_temperature {
 
 =head2 on_LED_DO ()
 
-Lights up the LED for dissolved oxygen sensor, indicating low DO content. Fish might die :)
-
-Take note that this will interact with the actual oxygen maintainer system.
+Lights up the LED for dissolved oxygen sensor, indicating low DO content. You fish might die :)
 
 =head2 is_on_LED_DO ()
 
@@ -457,9 +474,15 @@ Returns true if the LED of DO is lighted up.
 
 =cut
 
-sub on_LED_DO {...}
+sub on_LED_DO {
+    ref( my $self = shift ) or croak "Please use this the OO way";
+    $self->{DO_LED_on} = 1;
+}
 
-sub is_on_LED_DO {...}
+sub is_on_LED_DO {
+    ref( my $self = shift ) or croak "Please use this the OO way";
+    return $self->{DO_LED_on};
+}
 
 =head2 on_LED_turbidity ()
 
@@ -489,7 +512,14 @@ Returns the number of LEDs lighted up currently
 
 sub lighted_LED_count {
     ref( my $self = shift ) or croak "Please use this the OO way";
-    $self->{lighted_LED_count};
+    
+    my $total_led = 0;
+    $total_led++ if $self->{pH_LED_on};
+    $total_led++ if $self->{temperature_LED_on};
+    $total_led++ if $self->{DO_LED_on};
+    $total_led++ if $self->{turbidity_LED_on};
+    
+    return $total_led;
 }
 
 =head1 AUTHOR
