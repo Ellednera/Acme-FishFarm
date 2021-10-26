@@ -32,7 +32,7 @@
       <li><a href="#temperature_threshold">temperature_threshold ()</a></li>
       <li><a href="#set_temperature_threshold-celcius">set_temperature_threshold ( $celcius )</a></li>
       <li><a href="#temperature_is_normal">temperature_is_normal ()</a></li>
-      <li><a href="#lacking_oxygen">lacking_oxygen ()</a></li>
+      <li><a href="#lacking_oxygen">lacking_oxygen</a></li>
       <li><a href="#current_turbidity-new_turbidity">current_turbidity ( $new_turbidity )</a></li>
       <li><a href="#turbidity_threshold">turbidity_threshold</a></li>
       <li><a href="#set_turbidity_threshold-new_turbidity_threshold">set_turbidity_threshold ( $new_turbidity_threshold )</a></li>
@@ -41,9 +41,7 @@
   </li>
   <li><a href="#BUZZER-RELATED-SUBROUTINES-METHODS">BUZZER RELATED SUBROUTINES/METHODS</a>
     <ul>
-      <li><a href="#on_buzzer_short">on_buzzer_short ()</a></li>
       <li><a href="#is_on_buzzer_short">is_on_buzzer_short ()</a></li>
-      <li><a href="#on_buzzer_long">on_buzzer_long ()</a></li>
       <li><a href="#is_on_buzzer_long">is_on_buzzer_long ()</a></li>
     </ul>
   </li>
@@ -85,6 +83,10 @@
 
 <h1 id="CREATION-RELATED-SUBROUTINES-METHODS">CREATION RELATED SUBROUTINES/METHODS</h1>
 
+<p>Only 3 sensors are built-in. However, there is a 4th socket for the oxygen maintainer. For this socket, you&#39;ll need to manuall connect an Acme::FishFarm::OxygenMaintainer object by calling the <code>add_oxygen_maintainer</code> method.</p>
+
+<p>More sockets might be available in the future.</p>
+
 <h2 id="install-sensors">install ( %sensors )</h2>
 
 <p>Installs a water condition monitoring system.</p>
@@ -111,16 +113,6 @@
 <p>This will set the threshold value of the water temperature. Please pass in an array reference to this key in the form of <code>[min_temperature, max_temperature]</code></p>
 
 <p>The ranges of values are between 0 and 50 degree <b>celciuls</b></p>
-
-</dd>
-<dt id="DO">DO</dt>
-<dd>
-
-<p>Optional. The default threshold is <code>5 mg/L</code> and the default DO is to <code>8 mg/L</code>.</p>
-
-<p>This will set the threshold value of the DO in the water.</p>
-
-<p>The range of values are between 0 and 10 mg/L.</p>
 
 </dd>
 <dt id="turbidity">turbidity</dt>
@@ -183,7 +175,7 @@
 
 <p>Returns true if the current temperature is within the set range of threshold.</p>
 
-<h2 id="lacking_oxygen">lacking_oxygen ()</h2>
+<h2 id="lacking_oxygen">lacking_oxygen</h2>
 
 <p>Returns true if the current DO content is lower then the threshold.</p>
 
@@ -207,21 +199,25 @@
 
 <h1 id="BUZZER-RELATED-SUBROUTINES-METHODS">BUZZER RELATED SUBROUTINES/METHODS</h1>
 
-<h2 id="on_buzzer_short">on_buzzer_short ()</h2>
-
-<p>Makes the buzzer buzz for a while if only one LED is lighted up.</p>
-
 <h2 id="is_on_buzzer_short">is_on_buzzer_short ()</h2>
 
 <p>Returns true if the short buzzer is turned on.</p>
 
-<h2 id="on_buzzer_long">on_buzzer_long ()</h2>
-
-<p>Makes the buzzer buzz infinitely until less than 2 LEDs are lighted up.</p>
+<p>A short buzzer will buzz if there is 1 abnormal condition. If more than 1 abnormal conditions are present, the long buzzer will be turned on and this short buzzer will be turned off so that it&#39;s not too noisy :)</p>
 
 <h2 id="is_on_buzzer_long">is_on_buzzer_long ()</h2>
 
-<p>Returns true if the long buzzer is turned on.</p>
+<p>Returns true if the long buzzer is turned on and also turns off the short buzzer to reduce noise.</p>
+
+<dl>
+
+<dt id="tweak_buzzers-self">&amp;_tweak_buzzers ( $self )</dt>
+<dd>
+
+<p>Tweak the buzzers. It&#39;s either the short buzzer or the long buzzer switched on only.</p>
+
+</dd>
+</dl>
 
 <h1 id="LED-LIGHTS-RELATED-SUBROUTINES-METHODS">LED LIGHTS RELATED SUBROUTINES/METHODS</h1>
 
@@ -245,9 +241,7 @@
 
 <h2 id="on_LED_DO">on_LED_DO ()</h2>
 
-<p>Lights up the LED for dissolved oxygen sensor, indicating low DO content. Fish might die :)</p>
-
-<p>Take note that this will interact with the actual oxygen maintainer system.</p>
+<p>Lights up the LED for dissolved oxygen sensor, indicating low DO content. You fish might die :)</p>
 
 <h2 id="is_on_LED_DO">is_on_LED_DO ()</h2>
 
