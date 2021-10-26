@@ -8,6 +8,7 @@ docs/items_list
 docs/specifications
 lib/Acme/FishFarm.pm
 lib/Acme/FishFarm/Feeder.pm
+lib/Acme/FishFarm/OxygenMaintainer.pm
 lib/Acme/FishFarm/WaterConditionMonitor.pm
 lib/Acme/FishFarm/WaterFiltration.pm
 lib/Acme/FishFarm/WaterLevelMaintainer.pm
@@ -15,12 +16,15 @@ LICENSE
 Makefile.PL
 MANIFEST			This list of files
 README
+scripts/feeder.pl
+scripts/oxygen_maintainer.pl
 t/00-load.t
 t/02-fish_farm.t
 t/04-feeder.t
 t/06-water_filtration.t
 t/08-water_level_maintainer.t
 t/10-water_condition_monitor.t
+t/12-oxygen_maintainer.t
 t/manifest.t
 t/pod-coverage.t
 t/pod.t

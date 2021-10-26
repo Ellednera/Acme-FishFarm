@@ -38,9 +38,9 @@ Version 0.01
          [v] refill
    [v] tests
 
-[] Acme::FishFarm::WaterConditionMonitor
+[v] Acme::FishFarm::WaterConditionMonitor
    [v] gist
-   [] implementation
+   [v] implementation
       [v] CREATION
          [v] install
          [] add_oxygen_maintainer
@@ -55,28 +55,29 @@ Version 0.01
          [v] set_temperature_threshold
          [v] temperature_is_normal
 
-         [] lacking_oxygen
+         [v] lacking_oxygen
 
-         [] current_turbidity - get & set
-         [] turbidity_threshold
-         [] set_turbidity_threshold
-         [] water_dirty
+         [v] current_turbidity - get & set
+         [v] turbidity_threshold
+         [v] set_turbidity_threshold
+         [v] water_dirty
       [v] BUZZER
          [v] on_buzzer_short
          [v] is_on_buzzer_short
          [v] on_buzzer_long
          [v] is_on_buzzer_long
-      [] LED
+         [v] _tweak_buzzers
+      [v] LED
          [v] on_LED_pH
          [v] is_on_LED_pH
          [v] on_LED_temperature
          [v] is_on_LED_temperature
-         [] on_LED_DO
-         [] is_on_LED_DO
-         [] on_LED_turbidity
-         [] is_on_LED_turbidity
+         [v] on_LED_DO
+         [v] is_on_LED_DO
+         [v] on_LED_turbidity
+         [v] is_on_LED_turbidity
          [v] lighted_LED_count
-   [] tests
+   [v] tests
 
 [] Acme::FishFarm::WaterFiltration
    [v] gist
@@ -111,19 +112,19 @@ Version 0.01
    [] tests
    
 [] Acme::FishFarm::OxygenMaintainer
-   [] gist
-   [] implementation
-      [] CREATION
-      [] DISSOLVED OXYGEN SENSOR
-         [] current_DO_level
-         [] set_DO_level
-         [] low_DO_level_threshold
-         [] set_low_DO_level_threshold
-         [] is_low_DO_level
-      [] OXYGEN GENERATION
-         [] oxygen_generation_volume
-         [] set_oxygen_generation_volume
-         [] generate_oxygen
-   [] tests
+   [v] gist
+   [v] implementation
+      [v] CREATION
+         [v] install
+      [v] DISSOLVED OXYGEN SENSOR
+         [v] current_DO
+         [v] DO_threshold
+         [v] set_DO_threshold
+         [v] is_low_DO
+      [v] OXYGEN GENERATION
+         [v] oxygen_generation_volume
+         [v] set_oxygen_generation_volume
+         [v] generate_oxygen
+   [v] tests
 
 [] export all modules' documentation to html
