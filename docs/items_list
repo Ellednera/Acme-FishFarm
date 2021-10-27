@@ -3,16 +3,21 @@ Items list for Acme::FishFarm and related modules
 Version 0.01
 [] Acme::FishFarm
    [v] gist
+   [v] export -> ":all"
    [] implementation
-      [] new
-      [] install (systems =>[...])
-      [] install_all_systems
-      [] check_water_leve
-      [?] check_feeder
-      [?] check_water_filter
-      [] check_water_monitor
-      [] check_oxygen_level
-      [] ...
+      [] SYSTEM INSTALLATION
+         [] install_all_systems - half done, existing ones working
+      [v] SENSOR READING
+         [v] reduce_precision
+      [] AUTOMATED SYSTEMS
+         [v] consume_oxygen
+         [v] check_DO
+         [v] check_pH
+         [v] check_temperature
+         [v] check_turbidity
+         [] some more...
+         [v] render_leds
+         [v] render_buzzer
    [] tests
 
 [v] Acme::FishFarm::Feeder

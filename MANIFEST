@@ -19,6 +19,7 @@ MANIFEST			This list of files
 README
 scripts/feeder.pl
 scripts/oxygen_maintainer.pl
+scripts/water_monitor.pl
 t/00-load.t
 t/02-fish_farm.t
 t/04-feeder.t
