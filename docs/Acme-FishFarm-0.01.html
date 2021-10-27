@@ -2,7 +2,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-<title>Acme::FishFarm - A fish farm that has automated systems</title>
+<title>Acme::FishFarm - A fish farm with automated systems</title>
 <meta http-equiv="content-type" content="text/html; charset=utf-8" />
 <link rev="made" href="mailto:root@localhost" />
 </head>
@@ -16,36 +16,25 @@
   <li><a href="#VERSION">VERSION</a></li>
   <li><a href="#SYNOPSIS">SYNOPSIS</a></li>
   <li><a href="#EXPORT">EXPORT</a></li>
-  <li><a href="#CREATION-RELATED-METHODS">CREATION RELATED METHODS</a>
+  <li><a href="#SYSTEM-INSTALLATION-RELATED-SUBROUTINES">SYSTEM INSTALLATION RELATED SUBROUTINES</a>
     <ul>
-      <li><a href="#new">new ()</a></li>
-      <li><a href="#install-systems">install ( systems =&gt; [...] )</a></li>
-      <li><a href="#install_all_systems">install_all_systems ()</a></li>
+      <li><a href="#install_all_systems">install_all_systems</a></li>
     </ul>
   </li>
-  <li><a href="#WATER-LEVEL-MAINTAINER-SUBROUTINES-METHODS">WATER LEVEL MAINTAINER SUBROUTINES/METHODS</a>
+  <li><a href="#SENSOR-READING-RELATED-SUBROUTINES">SENSOR READING RELATED SUBROUTINES</a>
     <ul>
-      <li><a href="#check_water_level">check_water_level ()</a></li>
+      <li><a href="#reduce_precision-decimal">reduce_precision ( $decimal )</a></li>
     </ul>
   </li>
-  <li><a href="#AUTOMATED-FEEDER-SUBROUTINES-METHODS">AUTOMATED FEEDER SUBROUTINES/METHODS</a>
+  <li><a href="#AUTOMATED-SYSTEMS-RELATED-SUBROUTINES">AUTOMATED SYSTEMS RELATED SUBROUTINES</a>
     <ul>
-      <li><a href="#check_feeder-maybe-for-refilling">check_feeder () ??? maybe for refilling :)</a></li>
-    </ul>
-  </li>
-  <li><a href="#WATER-FILTRATION-SUBROUTINES-METHODS">WATER FILTRATION SUBROUTINES/METHODS</a>
-    <ul>
-      <li><a href="#check_water_filter-maybe-just-to-inspect-for-fun">check_water_filter () ??? maybe just to inspect for fun :)</a></li>
-    </ul>
-  </li>
-  <li><a href="#WATER-CONDITION-MONITORING-SUBROUTINES-METHODS">WATER CONDITION MONITORING SUBROUTINES/METHODS</a>
-    <ul>
-      <li><a href="#check_water_monitor">check_water_monitor ()</a></li>
-    </ul>
-  </li>
-  <li><a href="#OXYGEN-LEVEL-MAINTAINER-SUBROUTINES-METHODS">OXYGEN LEVEL MAINTAINER SUBROUTINES/METHODS</a>
-    <ul>
-      <li><a href="#check_oxygen_level">check_oxygen_level ()</a></li>
+      <li><a href="#consume_oxygen-oxygen_maintainer-consumed_oxygen">consume_oxygen ( $oxygen_maintainer, $consumed_oxygen )</a></li>
+      <li><a href="#check_DO-oxygen_maintainer-current_DO_reading">check_DO ( $oxygen_maintainer, $current_DO_reading )</a></li>
+      <li><a href="#check_pH-water_monitor-current_ph_reading">check_pH ( $water_monitor, $current_ph_reading )</a></li>
+      <li><a href="#check_temperature-water_monitor-current_temperature_reading">check_temperature ( $water_monitor, $current_temperature_reading )</a></li>
+      <li><a href="#check_turbidity-water_monitor-current_turbidity_reading">check_turbidity ( $water_monitor, $current_turbidity_reading )</a></li>
+      <li><a href="#render_leds-water_monitor">render_leds ( $water_monitor )</a></li>
+      <li><a href="#render_buzzer-water_monitor">render_buzzer ( $water_monitor )</a></li>
     </ul>
   </li>
   <li><a href="#AUTHOR">AUTHOR</a></li>
@@ -57,7 +46,7 @@
 
 <h1 id="NAME">NAME</h1>
 
-<p>Acme::FishFarm - A fish farm that has automated systems</p>
+<p>Acme::FishFarm - A fish farm with automated systems</p>
 
 <h1 id="VERSION">VERSION</h1>
 
@@ -69,105 +58,81 @@
 
 <h1 id="EXPORT">EXPORT</h1>
 
-<p>None by default</p>
+<p>The tag <code>:all</code> can be used to import all the functions available in this module.</p>
 
-<h1 id="CREATION-RELATED-METHODS">CREATION RELATED METHODS</h1>
+<h1 id="SYSTEM-INSTALLATION-RELATED-SUBROUTINES">SYSTEM INSTALLATION RELATED SUBROUTINES</h1>
 
-<h2 id="new">new ()</h2>
+<h2 id="install_all_systems">install_all_systems</h2>
 
-<p>Creates a new fish farm.</p>
+<p>Installs all the available systems with default values and returns them as a list of <code>Acme::FishFarm::*</code> objects in the following sequence:</p>
 
-<h2 id="install-systems">install ( systems =&gt; [...] )</h2>
+<pre><code>    C&lt;(Feeder, OxygenMaintainer, WaterConditionMonitor, WaterLevelMaintainer, WaterFiltration)&gt;</code></pre>
 
-<p>Installs the specified systems to your fish farm. This is done by setting the <code>systems</code> key.</p>
+<h1 id="SENSOR-READING-RELATED-SUBROUTINES">SENSOR READING RELATED SUBROUTINES</h1>
 
-<p>The values for <code>systems</code> include:</p>
+<h2 id="reduce_precision-decimal">reduce_precision ( $decimal )</h2>
 
-<ul>
+<p>Reduces <code>$decimal</code> to a maximum of 3 decimal points. Make sure to pass in a decimal with more than 3 decimal points.</p>
 
-<li><p>water_level</p>
+<p>Returns the reduced 3-decimal value.</p>
 
-</li>
-<li><p>feeder</p>
+<p>This subroutine is useful if you are trying to set the current sensor readings randomly using the built-in <code>rand</code> function as you do not want to end up with too many decimals on the screen.</p>
 
-</li>
-<li><p>water_filter</p>
+<h1 id="AUTOMATED-SYSTEMS-RELATED-SUBROUTINES">AUTOMATED SYSTEMS RELATED SUBROUTINES</h1>
 
-</li>
-<li><p>water_monitor</p>
+<p>All of the subroutines here will give output.</p>
 
-<p>#=item * oxygen_level</p>
+<h2 id="consume_oxygen-oxygen_maintainer-consumed_oxygen">consume_oxygen ( $oxygen_maintainer, $consumed_oxygen )</h2>
 
-</li>
-</ul>
+<p>This will cause the oxygen level (DO level) of the <code>Acme::FishFarm::OxygenMaintainer</code> to reduce by <code>$consumed_oxygen mg/L</code></p>
 
-<p>To install all the systems in one go, use the <code>install_all_systems</code> method instead.</p>
+<p>Returns 1 upon success.</p>
 
-<h2 id="install_all_systems">install_all_systems ()</h2>
+<h2 id="check_DO-oxygen_maintainer-current_DO_reading">check_DO ( $oxygen_maintainer, $current_DO_reading )</h2>
 
-<p>Installs all the systems available in the fish farm. See <code>install</code> method for the available systems</p>
+<p>This checks and outputs the condition of the current DO level.</p>
 
-<h1 id="WATER-LEVEL-MAINTAINER-SUBROUTINES-METHODS">WATER LEVEL MAINTAINER SUBROUTINES/METHODS</h1>
+<p>Take note that this process will also trigger the LED and buzzer if abnormal condition is present.</p>
 
-<h2 id="check_water_level">check_water_level ()</h2>
+<p>Returns 1 upon success.</p>
 
-<p>Returns the current water level in your pond, tank, aquarium or whatever.</p>
+<h2 id="check_pH-water_monitor-current_ph_reading">check_pH ( $water_monitor, $current_ph_reading )</h2>
 
-<h1 id="AUTOMATED-FEEDER-SUBROUTINES-METHODS">AUTOMATED FEEDER SUBROUTINES/METHODS</h1>
+<p>This checks and outputs the condition of the current pH value.</p>
 
-<h2 id="check_feeder-maybe-for-refilling">check_feeder () ??? maybe for refilling :)</h2>
+<p>Take note that this process will also trigger the LED and buzzer if abnormal condition is present.</p>
 
-<p>Returns the amount (volume) of fish food in the feeder.</p>
+<p>Returns 1 upon success.</p>
 
-<p>This is only useful if you want to see how much fish food is still there. This is not an important feature of this module</p>
+<h2 id="check_temperature-water_monitor-current_temperature_reading">check_temperature ( $water_monitor, $current_temperature_reading )</h2>
 
-<h1 id="WATER-FILTRATION-SUBROUTINES-METHODS">WATER FILTRATION SUBROUTINES/METHODS</h1>
+<p>This checks and outputs the condition of the current temperature.</p>
 
-<h2 id="check_water_filter-maybe-just-to-inspect-for-fun">check_water_filter () ??? maybe just to inspect for fun :)</h2>
+<p>Take note that this process will also trigger the LED and buzzer if abnormal condition is present.</p>
 
-<p>Returns the amount of waste in the filtering cylinder.</p>
+<p>Returns 1 upon success.</p>
 
-<h1 id="WATER-CONDITION-MONITORING-SUBROUTINES-METHODS">WATER CONDITION MONITORING SUBROUTINES/METHODS</h1>
+<h2 id="check_turbidity-water_monitor-current_turbidity_reading">check_turbidity ( $water_monitor, $current_turbidity_reading )</h2>
 
-<h2 id="check_water_monitor">check_water_monitor ()</h2>
+<p>This checks and outputs the condition of the current temperature.</p>
 
-<p>Returns a hash of the current condition of the water. The hash will include the following keys:</p>
+<p>Take note that this process will also trigger the LED and buzzer if abnormal condition is present.</p>
 
-<dl>
+<p>Returns 1 upon success.</p>
 
-<dt id="pH">1. pH</dt>
-<dd>
+<h2 id="render_leds-water_monitor">render_leds ( $water_monitor )</h2>
 
-<p>The values are in the range of 1-14</p>
+<p>Outputs which LEDs are lighted up. Returns 1 upon success.</p>
 
-</dd>
-<dt id="temperature">2. temperature</dt>
-<dd>
+<p>Currently this subroutine only shows the LEDs present in <code>$water_monitor</code> ie. <code>Acme::FishFarm::WaterConditionMonitor</code> object. See that module for more details about the available LEDs.</p>
 
-<p>The ranges of values are between 0 and 50 degree <b>celciuls</b></p>
+<p>More LEDs will be available in the future. You can append your own LEDs by yourself if you really need to :)</p>
 
-</dd>
-<dt id="DO">3. DO</dt>
-<dd>
+<h2 id="render_buzzer-water_monitor">render_buzzer ( $water_monitor )</h2>
 
-<p>The range of values are between 0 and 10 mg/L</p>
+<p>Outputs which buzzer is buzzing. Returns 1 upon success.</p>
 
-</dd>
-<dt id="turbidity">4. turbidity</dt>
-<dd>
-
-<p>The range of values are between 0 and 300 ntu.</p>
-
-</dd>
-</dl>
-
-<h1 id="OXYGEN-LEVEL-MAINTAINER-SUBROUTINES-METHODS">OXYGEN LEVEL MAINTAINER SUBROUTINES/METHODS</h1>
-
-<h2 id="check_oxygen_level">check_oxygen_level ()</h2>
-
-<p>This is the same as checking the DO content through the <code>check_water_filter</code> method.</p>
-
-<p>Either this part of the DO part might be removed</p>
+<p>See <code>Acme::FishFarm::WaterConditionMonitor</code> for details on how the short and long buzzers are switched on and off.</p>
 
 <h1 id="AUTHOR">AUTHOR</h1>
 
