@@ -9,6 +9,8 @@ use Acme::FishFarm::Feeder;
 use Acme::FishFarm::OxygenMaintainer;
 use Acme::FishFarm::WaterConditionMonitor;
 
+use Acme::FishFarm::WaterFiltration;
+
 =head1 NAME
 
 Acme::FishFarm - A fish farm with automated systems
@@ -37,12 +39,12 @@ use Exporter qw( import );
 our @EXPORT_OK = qw( 
     install_all_systems 
     reduce_precision consume_oxygen 
-    check_DO check_pH check_temperature check_turbidity
+    check_DO check_pH check_temperature check_turbidity check_water_filter
     render_leds render_buzzer
 );
 our %EXPORT_TAGS = ( 
     all => [ qw( install_all_systems reduce_precision consume_oxygen check_DO check_pH check_temperature 
-                 check_turbidity render_leds render_buzzer ) ],
+                 check_turbidity check_water_filter render_leds render_buzzer ) ],
 );
 
 =head1 SYSTEM INSTALLATION RELATED SUBROUTINES
@@ -60,7 +62,7 @@ sub install_all_systems {
     my $oxygen_maintainer = Acme::FishFarm::OxygenMaintainer->install;
     my $water_monitor = Acme::FishFarm::WaterConditionMonitor->install;
     my $water_level = "";
-    my $water_filter = "";
+    my $water_filter = Acme::FishFarm::WaterFiltration->install;
     
     # remember to connect water oxygem maintainer to water condition monitoring :)
     $water_monitor->add_oxygen_maintainer( $oxygen_maintainer );
@@ -218,6 +220,35 @@ sub check_turbidity {
     1;
 }
 
+
+=head2 check_water_filter
+
+This checks and outputs the condition of the current temperature.
+
+Take note that this process B<DOES NOT> trigger the LED and buzzer if abnormal condition is present.
+
+Returns 1 upon success.
+
+=cut
+
+sub check_water_filter {
+    my ( $water_filter, $current_reading ) = @_;
+    my $waste_threshold = $water_filter->waste_count_threshold;
+    
+    $water_filter->current_waste_count( $current_reading );
+    
+    print "Current Waste Count: ", $current_reading, " (high: >= ", $waste_threshold, ")\n";
+
+    if ( $water_filter->is_cylinder_dirty ) {
+        print "  !! Filtering cylinder is dirty!\n";
+        print "  Cleaned the filter!\n";
+        $water_filter->clean_cylinder;
+    } else {
+        print "  Filtering cylinder is still clean.\n";
+    }
+    1;
+}
+
 =head2 render_leds ( $water_monitor )
 
 Outputs which LEDs are lighted up. Returns 1 upon success.
@@ -287,6 +318,7 @@ sub render_buzzer {
     }
     1;
 }
+
 
 =head1 AUTHOR
 

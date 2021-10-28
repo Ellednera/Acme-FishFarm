@@ -108,7 +108,6 @@ Returns the DO threshold.
 
 sub DO_threshold {
     ref( my $self = shift ) or croak "Please use this the OO way";
-    my $slef = shift;
     $self->{DO_threshold};
 }
 
