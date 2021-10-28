@@ -3,6 +3,7 @@ package Acme::FishFarm::WaterFiltration;
 use 5.006;
 use strict;
 use warnings;
+use Carp "croak";
 
 =head1 NAME
 
@@ -21,8 +22,6 @@ our $VERSION = '0.01';
 
     use Acme::FishFarm::WaterFiltration;
 
-    my $foo = Acme::FishFarm::WaterFiltration->new();
-    ...
 
 =head1 EXPORT
 
@@ -38,63 +37,159 @@ This feature is based on the water filter found L<here|https://www.filternox.com
 
 =head1 CREATION SUBROUTINES/METHODS
 
-=head2 install ( $waste_threshold )
+=head2 install ( %options )
 
-Installs a water filtration system.
+Installs a cool water filtration system.
 
-C<waste_threshold> is optional and the default value is 75.
+The following are avaiable for C<%options>:
 
-The C<$waste_threshold> is the maximum limit of waste in the cylinder. When this count is hit, it 
-will turn on the cleaners / spatulas or whatever it's called :).
+=over 4
 
-We'll just assume the range of C<0> to C<100> for this waste counter.
+=item current_waste_count
+
+The current waste count in the cylinder. Default is C<0>.
+
+=item waste_threshold
+
+Default value is C<75>.
+
+Sets the waste treshold.
+
+This is the maximum limit of waste in the cylinder. When this count is hit, it will turn on the cleaners / spatulas or whatever it's called :).
+
+=back
 
 =cut
 
-sub install {...}
+sub install {
+    my $class = shift;
+    my %options = @_;
+    
+    if ( not $options{current_waste_count} ) {
+        $options{current_waste_count} = 0;
+    }
+    
+    if ( not $options{waste_threshold} ) {
+        $options{waste_threshold} = 75;
+    }
+    
+    bless \%options, "Acme::FishFarm::WaterFiltration";
+}
 
 
 =head1 WASTE LEVEL DETECTING SUBROUTINES/METHODS
 
-=head2 read_waste_counter ()
+=head2 current_waste_count ( $new_waste_count )
 
-Gets the current waste count.
+Sets / returns the current waste count inside the cylinder.
 
-=cut
-
-sub read_waste_counter {...}
-
-=head2 get_waste_counter_threshold ()
-
-Gets the waste count threshold.
+C<$new_waste_count> is optional. If present, the current waste count will be set to C<$new_waste_count>. Otherwise, returns the current waste count.
 
 =cut
 
-sub get_waste_counter_threshold {...}
+sub current_waste_count {
+    ref( my $self = shift ) or croak "Please use this the OO way";
+    
+    if ( @_ ) {
+        $self->{current_waste_count} = shift;
+    } else {
+        $self->{current_waste_count};
+    }
+}
 
-=head2 set_waste_counter_threshold ()
+=head2 waste_count_threshold ()
+
+Returns the waste count threshold.
+
+=cut
+
+sub waste_count_threshold {
+    ref( my $self = shift ) or croak "Please use this the OO way";
+    $self->{waste_threshold};
+}
+
+=head2 set_waste_count_threshold ()
 
 Sets the waste count threshold.
 
 =cut
 
-sub set_waste_counter_threshold {...}
+sub set_waste_count_threshold {
+    ref( my $self = shift ) or croak "Please use this the OO way";
+    $self->{waste_threshold} = shift;
+}
 
+=head2 is_filter_layer_dirty
+
+Synonym for C<is_cylinder_dirty>. See next method.
+
+=head2 is_cylinder_dirty
+
+Returns C<1> if the filtering cylinder is dirty ie current waste count hits the waste count threshold. Returns C<0> otherwise.
+
+Remember to clean your cylinder ie. filter layer as soon as possible.
+
+=cut
+
+sub is_filter_layer_dirty {
+    ref( my $self = shift ) or croak "Please use this the OO way";
+    $self->is_cylinder_dirty;
+}
+
+sub is_cylinder_dirty {
+    ref( my $self = shift ) or croak "Please use this the OO way";
+    if ( $self->{current_waste_count} >= $self->{waste_threshold} ) {
+        return 1;
+    } else {
+        return 0;
+    }
+}
 
 =head1 CLEANING RELATED SUBROUTINES/METHODS
 
-=head2 turn_on_spatulas ()
+=head2 clean_filter_layer
+
+Synonym for C<is_cylinder_dirty>. See next method.
+
+=cut
+
+sub clean_filter_layer {
+    ref( my $self = shift ) or croak "Please use this the OO way";
+    $self->clean_cylinder;    
+}
+
+=head2 clean_cylinder
+
+Cleans the filter layer in the cylinder.
+
+This will cause the current waste count to become C<0>.
+
+=cut
+
+sub clean_cylinder {
+    ref( my $self = shift ) or croak "Please use this the OO way";
+    $self->{current_waste_count} = 0;
+}
+
+=head2 turn_on_spatulas
+
+Unimplemented.
 
 Turns on the cleaning mechanism ie spins the spatulas :)
 
-The spatulas will scrub the waste off the filter lining. This means the waste count will drop.
+This will casue the waste count to reduce to 0 gradually :)
 
-The spatulas should be turned on until the waste count is 0 before turning off. This should be 
-implemented in the main script.
+Use C<clean_cylinder> method instead for the moment :)
 
-=head2 turn_off_spatulas ()
+=head2 turn_off_spatulas
+
+Unimplemented.
 
 Turns off the spatulas and watch the waster counter rise again. :)
+
+Not needed for the moment. Will be implemented in the future.
+
+Use C<clean_cylinder> method instead for the moment :)
 
 =cut
 
