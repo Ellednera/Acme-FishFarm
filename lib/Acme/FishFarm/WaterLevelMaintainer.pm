@@ -6,7 +6,7 @@ use warnings;
 
 =head1 NAME
 
-Acme::FishFarm::WaterLevelMaintainer - The great new Acme::FishFarm::WaterLevelMaintainer!
+Acme::FishFarm::WaterLevelMaintainer - Water Level MAintainer for Acme::FishFarm
 
 =head1 VERSION
 

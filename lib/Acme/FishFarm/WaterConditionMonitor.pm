@@ -139,7 +139,7 @@ sub current_ph {
     }
 }
 
-=head2 ph_threshold ()
+=head2 ph_threshold
 
 Returns the pH threshold as an array ref.
 
@@ -163,7 +163,7 @@ sub set_ph_threshold {
     $self->{pH_range} = $new_ph_range_ref;
 }
 
-=head2 ph_is_normal ()
+=head2 ph_is_normal
 
 Returns true if the current pH is within the set range of threshold.
 
@@ -210,7 +210,7 @@ sub current_temperature {
     
 }
 
-=head2 temperature_threshold ()
+=head2 temperature_threshold
 
 Returns the acceptable temperature range as an array ref.
 
@@ -235,7 +235,7 @@ sub set_temperature_threshold {
     $self->{temperature_range} = $new_temperature_range_ref;
 }
 
-=head2 temperature_is_normal ()
+=head2 temperature_is_normal
 
 Returns true if the current temperature is within the set range of threshold.
 
@@ -328,7 +328,7 @@ sub set_turbidity_threshold {
     $self->{turbidity_threshold} = shift;
 }
 
-=head2 water_dirty ()
+=head2 water_dirty
 
 Returns true if the current turbidity is highter then the threshold.
 
@@ -358,7 +358,7 @@ sub water_dirty {
 # these 2 should be wrappers of something in the future
 =head1 BUZZER RELATED SUBROUTINES/METHODS
 
-=head2 is_on_buzzer_short ()
+=head2 is_on_buzzer_short
 
 Returns true if the short buzzer is turned on.
 
@@ -373,7 +373,7 @@ sub is_on_buzzer_short {
 }
 
 
-=head2 is_on_buzzer_long ()
+=head2 is_on_buzzer_long
 
 Returns true if the long buzzer is turned on and also turns off the short buzzer to reduce noise.
 
@@ -424,11 +424,11 @@ sub _tweak_buzzers {
 An LED is lighted up if the corresponding parameter are in an abnormal state.
 This action is to be done in through the main script.
 
-=head2 on_LED_pH ()
+=head2 on_LED_pH
 
 Lights up the LED for pH sensor, indicating abnormal pH.
 
-=head2 is_on_LED_pH ()
+=head2 is_on_LED_pH
 
 Returns true if the LED of pH is lighted up.
 
@@ -444,11 +444,11 @@ sub is_on_LED_pH {
     return $self->{pH_LED_on};
 }
 
-=head2 on_LED_temperature ()
+=head2 on_LED_temperature
 
 Lights up the LED for temperature sensor, indicating abnormal water temperature.
 
-=head2 is_on_LED_temperature ()
+=head2 is_on_LED_temperature
 
 Returns true if the LED of temperature is lighted up.
 
@@ -464,11 +464,11 @@ sub is_on_LED_temperature {
     return $self->{temperature_LED_on};
 }
 
-=head2 on_LED_DO ()
+=head2 on_LED_DO
 
 Lights up the LED for dissolved oxygen sensor, indicating low DO content. You fish might die :)
 
-=head2 is_on_LED_DO ()
+=head2 is_on_LED_DO
 
 Returns true if the LED of DO is lighted up.
 
@@ -484,11 +484,11 @@ sub is_on_LED_DO {
     return $self->{DO_LED_on};
 }
 
-=head2 on_LED_turbidity ()
+=head2 on_LED_turbidity
 
 Light up the LED for turbidity sensor, indicating high level of waste etc. Fish might die :)
 
-=head2 is_on_LED_turbidity ()
+=head2 is_on_LED_turbidity
 
 Returns true if the LED of DO is lighted up.
 
@@ -504,7 +504,7 @@ sub is_on_LED_turbidity {
     return $self->{turbidity_LED_on};
 }
 
-=head2 lighted_LED_count ()
+=head2 lighted_LED_count
 
 Returns the number of LEDs lighted up currently
 
