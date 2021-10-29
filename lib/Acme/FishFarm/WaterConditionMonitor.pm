@@ -7,20 +7,21 @@ use Carp "croak";
 
 =head1 NAME
 
-Acme::FishFarm::WaterConditionMonitor - Water Condition Monitor with Alarm for Acme::FishFarm
+Acme::FishFarm::WaterConditionMonitor - Water Condition Monitor for Acme::FishFarm
 
 =head1 VERSION
 
-Version 0.01
+Version 1.00
 
 =cut
 
-our $VERSION = '0.01';
+our $VERSION = '1.00';
 
 
 =head1 SYNOPSIS
 
     use Acme::FishFarm::WaterConditionMonitor;
+    # missing stuff will be added in the next release
 
 =head1 EXPORT
 
@@ -384,6 +385,8 @@ sub is_on_buzzer_long {
     _tweak_buzzers( $self );
     return $self->{long_buzzer_on};
 }
+
+=head1 Private Methods for Buzzers
 
 =over 4
 
