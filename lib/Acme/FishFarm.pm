@@ -8,27 +8,27 @@ use Carp "croak";
 use Acme::FishFarm::Feeder;
 use Acme::FishFarm::OxygenMaintainer;
 use Acme::FishFarm::WaterConditionMonitor;
-
+use Acme::FishFarm::WaterLevelMaintainer;
 use Acme::FishFarm::WaterFiltration;
 
 =head1 NAME
 
-Acme::FishFarm - A fish farm with automated systems
+Acme::FishFarm - A Fish Farm with Automated Systems
 
 =head1 VERSION
 
-Version 0.01
+Version 1.00
 
 =cut
 
-our $VERSION = '0.01';
+our $VERSION = '1.00';
 
 
 =head1 SYNOPSIS
 
     use Acme::FishFarm;
-
-
+    # missing stuff will be added in the next release
+    
 =head1 EXPORT
 
 The tag C<:all> can be used to import all the functions available in this module.
@@ -39,12 +39,13 @@ use Exporter qw( import );
 our @EXPORT_OK = qw( 
     install_all_systems 
     reduce_precision consume_oxygen 
-    check_DO check_pH check_temperature check_turbidity check_water_filter
+    check_DO check_pH check_temperature check_turbidity check_water_filter check_water_level check_feeder
     render_leds render_buzzer
 );
 our %EXPORT_TAGS = ( 
     all => [ qw( install_all_systems reduce_precision consume_oxygen check_DO check_pH check_temperature 
-                 check_turbidity check_water_filter render_leds render_buzzer ) ],
+                 check_turbidity check_water_filter check_water_level check_feeder render_leds 
+                 render_buzzer ) ],
 );
 
 =head1 SYSTEM INSTALLATION RELATED SUBROUTINES
@@ -55,13 +56,15 @@ Installs all the available systems with default values and returns them as a lis
 
     C<(Feeder, OxygenMaintainer, WaterConditionMonitor, WaterLevelMaintainer, WaterFiltration)>
 
+Take note that only the water condition monitor currently supports the oxygen maintainer only.
+
 =cut
 
 sub install_all_systems {
     my $feeder = Acme::FishFarm::Feeder->install;
     my $oxygen_maintainer = Acme::FishFarm::OxygenMaintainer->install;
     my $water_monitor = Acme::FishFarm::WaterConditionMonitor->install;
-    my $water_level = "";
+    my $water_level = Acme::FishFarm::WaterLevelMaintainer->install;
     my $water_filter = Acme::FishFarm::WaterFiltration->install;
     
     # remember to connect water oxygem maintainer to water condition monitoring :)
@@ -75,9 +78,9 @@ sub install_all_systems {
 
 =head2 reduce_precision ( $decimal )
 
-Reduces C<$decimal> to a maximum of 3 decimal points. Make sure to pass in a decimal with more than 3 decimal points.
+Reduces positive or negative C<$decimal> to a 3-decimal value. Make sure to pass in a decimal with more than 3 decimal points.
 
-Returns the reduced 3-decimal value.
+Returns the reduced precision value.
 
 This subroutine is useful if you are trying to set the current sensor readings randomly using the built-in C<rand> function as you do not want to end up with too many decimals on the screen.
 
@@ -86,13 +89,24 @@ This subroutine is useful if you are trying to set the current sensor readings r
 sub reduce_precision {
     my $sensor_reading = shift;
     croak "Please pass in a decimal value" if not $sensor_reading =~ /\./;
-    $sensor_reading =~ /(\d+\.\d{3})/;
-    $1;
+    
+    $sensor_reading =~ /(-?\d+\.\d{3})/;
+    return $1;
 }
 
 =head1 AUTOMATED SYSTEMS RELATED SUBROUTINES
 
 All of the subroutines here will give output.
+
+Take note that there are some systems that can't be connected to the water monitoring system and therefore will not effect the LEDs or buzzers. These systems are:
+
+=over 4
+
+=item * Acme::FishFarm::WaterFiltration
+
+=item * Acme::FishFarm::WaterLevelMaintainer
+
+=back
 
 =head2 consume_oxygen ( $oxygen_maintainer, $consumed_oxygen )
 
@@ -210,7 +224,7 @@ sub check_turbidity {
     $water_monitor->current_turbidity( $current_reading );
     
     print "Current Turbidity: ", $water_monitor->current_turbidity, " ntu",
-        " (dirty: > ", $turbidity_threshold, ")";
+        " (dirty: > ", $turbidity_threshold, ")\n";
 
     if ( $water_monitor->water_dirty ) {
         print "  !! Water is dirty!\n";
@@ -221,9 +235,9 @@ sub check_turbidity {
 }
 
 
-=head2 check_water_filter
+=head2 check_water_filter ( $water_filter, $current_waste_count, $reduce_waste_by )
 
-This checks and outputs the condition of the current temperature.
+This checks, performs necessary actions and outputs the condition of the current waste count in the filtering cylinder.
 
 Take note that this process B<DOES NOT> trigger the LED and buzzer if abnormal condition is present.
 
@@ -232,20 +246,97 @@ Returns 1 upon success.
 =cut
 
 sub check_water_filter {
-    my ( $water_filter, $current_reading ) = @_;
+    my $water_filter = shift;
+    my $current_reading = shift;
+    my $reduce_waste_by = shift || $water_filter->reduce_waste_count_by;
     my $waste_threshold = $water_filter->waste_count_threshold;
     
     $water_filter->current_waste_count( $current_reading );
-    
+    print "Waste Count to Reduce: ", $water_filter->reduce_waste_count_by, "\n";
     print "Current Waste Count: ", $current_reading, " (high: >= ", $waste_threshold, ")\n";
 
     if ( $water_filter->is_cylinder_dirty ) {
         print "  !! Filtering cylinder is dirty!\n";
-        print "  Cleaned the filter!\n";
-        $water_filter->clean_cylinder;
+        $water_filter->turn_on_spatulas;
+        print "  Cleaning spatulas turned on.\n";
+        $water_filter->clean_cylinder( $reduce_waste_by );
+        print "  Cleaning the cylinder...Done!\n";
+        print "Current waste count: ", $water_filter->current_waste_count, "\n";
     } else {
         print "  Filtering cylinder is still clean.\n";
     }
+    1;
+}
+
+=head2 check_water_level ( $water_level_maintainer, $current_water_level )
+
+This checks, performs necessary actions and outputs the condition of the current waste count in the filtering cylinder.
+
+Take note that this process B<DOES NOT> trigger the LED and buzzer if abnormal condition is present.
+
+Returns 1 upon success.
+
+=cut
+
+sub check_water_level {
+    my $water_level = shift;
+    my $current_reading = shift;
+    my $height_increase = $water_level->water_level_increase_height; # for output
+    my $water_level_threshold = $water_level->low_water_level_threshold;
+    
+    $water_level->current_water_level( $current_reading ); # input by user
+    print "Current Water Level: ", $current_reading, " m (low: < ", $water_level_threshold, " m)\n";
+
+    if ( $water_level->is_low_water_level ) {
+        print "  !! Water level is low!\n";
+        $water_level->pump_water_in;
+        print "  Pumping in ", $height_increase, " m of water...\n";
+        print "Current Water Level: ", $water_level->current_water_level, " m\n";
+    } else {
+        print "  Water level is still normal.\n";
+    }
+    1;
+}
+
+=head2 check_feeder ( $feeder, $verbose )
+
+This checks, performs necessary actions and outputs the condition of the feeder. Each call will tick the clock inside the feeder. See C<Acme::FishFarm::Feeder> for more info.
+
+If the food tank is empty, it will be filled to the default. So if you want to fill a different amount, please set the amount before hand. See <Acme::FishFarm::Feeder>.
+
+Setting C<$verbose> to 1 will give more output about the empty food tank.
+
+Take note that this process B<DOES NOT> trigger the LED and buzzer if abnormal condition is present.
+
+Returns 1 upon success.
+
+=cut
+
+sub check_feeder {
+    my ( $feeder, $verbose ) = @_;
+    if ( $feeder->timer_is_up ) {
+        print "Timer is up, time to feed the fish!\n";
+        
+        if ( $verbose) {
+            $feeder->feed_fish( verbose => 1 );        
+        } else {
+            $feeder->feed_fish;
+        }
+        print "  Feeding ", $feeder->feeding_volume, " cm^3 of fish food to the fish...\n";
+        
+    } else {
+        print $feeder->time_remaining, " hours left until it's time to feed the fish.\n";
+    }
+    
+    if ( $feeder->food_remaining <= 0  ) {
+        print "  !! Food tank empty!\n";
+        $feeder->refill; # default back to 500 cm^3
+        print "  Refilled food tank back to ", $feeder->food_tank_capacity, " cm^3.\n";
+    }
+
+    print "  Food Remaining: ", $feeder->food_remaining, "cm^3.\n";
+    
+    $feeder->tick_clock;
     1;
 }
 
