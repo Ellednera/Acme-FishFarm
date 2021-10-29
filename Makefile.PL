@@ -17,11 +17,17 @@ my %WriteMakefileArgs = (
         'Test::More' => '0',
     },
     PREREQ_PM => {
-        #'ABC'              => '1.6',
-        #'Foo::Bar::Module' => '5.0401',
         'Carp' => '0',
-        'YAML' => '0',
     },
+    META_MERGE => {
+      resources => {
+        repository => {
+            type => 'git',
+            url => 'git://https://github.com/Ellednera/Acme-FishFarm.git',
+            web => 'https://github.com/Ellednera/Acme-FishFarm.git',
+        },
+      },
+    }, 
     dist  => { COMPRESS => 'gzip -9f', SUFFIX => 'gz', },
     clean => { FILES => 'Acme-FishFarm-*' },
 );

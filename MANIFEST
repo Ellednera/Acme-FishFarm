@@ -2,6 +2,7 @@ Changes
 docs/Acme-FishFarm-0.01.html
 docs/Acme-FishFarm-Feeder-0.01.html
 docs/Acme-FishFarm-OxygenMaintainer-0.01.html
+docs/Acme-FishFarm-OxygenMaintainer.html
 docs/Acme-FishFarm-WaterConditionMonitor-0.01.html
 docs/Acme-FishFarm-WaterFiltration-0.01.html
 docs/Acme-FishFarm-WaterLevelMaintainer-0.01.html
@@ -17,9 +18,6 @@ LICENSE
 Makefile.PL
 MANIFEST			This list of files
 README
-scripts/feeder.pl
-scripts/oxygen_maintainer.pl
-scripts/water_monitor.pl
 t/00-load.t
 t/02-fish_farm.t
 t/04-feeder.t

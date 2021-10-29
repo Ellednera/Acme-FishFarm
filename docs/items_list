@@ -1,12 +1,12 @@
 Items list for Acme::FishFarm and related modules
 
 Version 0.01
-[] Acme::FishFarm
+[v] Acme::FishFarm
    [v] gist
    [v] export -> ":all"
-   [] implementation
-      [] SYSTEM INSTALLATION
-         [] install_all_systems - half done, existing ones working
+   [v] implementation
+      [v] SYSTEM INSTALLATION
+         [v] install_all_systems - almost done, existing ones working
       [v] SENSOR READING
          [v] reduce_precision
       [] AUTOMATED SYSTEMS
@@ -15,10 +15,11 @@ Version 0.01
          [v] check_pH
          [v] check_temperature
          [v] check_turbidity
-         [] some more...
+         [v] check_water_filter - has new current reading
+         [v] check_water_level - has new current reading
          [v] render_leds
          [v] render_buzzer
-   [] tests
+   [v] tests
 
 [v] Acme::FishFarm::Feeder
    [v] synopsis
@@ -84,39 +85,41 @@ Version 0.01
          [v] lighted_LED_count
    [v] tests
 
-[] Acme::FishFarm::WaterFiltration
+[v] Acme::FishFarm::WaterFiltration
    [v] gist
    [] implementation
-      [] CREATION
-         [] install
-      [] WASTE LEVEL DETECTION
-         [] read_waste_counter
-         [] waste_counter_threshold
-         [] set_waste_counter_threshold
-         [] water_is_dirty
-      [] CLEANING / SPATULA
-         [] turn_on_spatulas
-         [] turn_off_spatulas
-   [] tests
+      [v] CREATION
+         [v] install
+      [v] WASTE LEVEL DETECTION
+         [v] current_waste_count - get & set
+         [v] waste_count_threshold
+         [v] set_waste_count_threshold
+         [v] filter_layer_is_dirty - alias for cylinder_is_dirty
+         [v] is_cylinder_dirty
+      [v] CLEANING / SPATULA
+         [v] clean_filter_layer         
+         [v] clean_cylinder
+         [v] turn_on_spatulas
+         [v] turn_off_spatulas
+   [v] tests
 
-[] Acme::FishFarm::WaterLevelMaintainer
-   [] gist
-   [] implementation
-      [] CREATION
-         [] install
-      [] WATER LEVEL DETECTION
-         [] current_water_level
-         [] set_water_level
-         [] low_water_level_threshold
-         [] set_low_water_level_threshold
-         [] is_low_water_level
-      [] PUMPS
-         [] pumping_volume
-         [] set_pumping_volume
-         [] pump_water_in
-   [] tests
+[v] Acme::FishFarm::WaterLevelMaintainer
+   [v] gist
+   [v] implementation
+      [v] CREATION
+         [v] install
+      [v] WATER LEVEL DETECTION
+         [v] current_water_level - get & set
+         [v] low_water_level_threshold
+         [v] set_low_water_level_threshold
+         [v] is_low_water_level
+      [v] PUMPS
+         [v] water_level_increase_height
+         [v] set_water_level_increase_height
+         [v] pump_water_in
+   [v] tests
    
-[] Acme::FishFarm::OxygenMaintainer
+[v] Acme::FishFarm::OxygenMaintainer
    [v] gist
    [v] implementation
       [v] CREATION
@@ -132,4 +135,4 @@ Version 0.01
          [v] generate_oxygen
    [v] tests
 
-[] export all modules' documentation to html
+[v] export all modules' documentation to html
