@@ -1,15 +1,15 @@
-Acme-FishFarm (Version 0.01)
+Acme-FishFarm (Version 1.00)
 
 This is a module for creating a virtual fish farm (aquaculture) with automated systems. 
 
 This module is not meant to implement everything found in the real aquaculture field. As a 
 matter of fact, this is part of an assignment which I think it would be good to pack those 
-features into a module. 
+features into a module.
 
-This module might be useful for the sake of fun.
+This module might probably be good for fun :)
 
 The Acme::FishFarm distribution comes along with several other related modules. These are 
-the automated systems used in aquaculture. Those other modules are:
+the automated systems used in aquaculture. These modules are:
 
 1. Acme::FishFarm::Feeder
 2. Acme::FishFarm::WaterFiltration
@@ -17,11 +17,7 @@ the automated systems used in aquaculture. Those other modules are:
 4. Acme::FishFarm::WaterConditionMonitor
 5. Acme::FishFarm::OxygenMaintainer
 
-The documentations for all these modules can be found in the docs directory together with 
-the specifications if you're interested :)
-
-This distribution will be uploaded to CPAN once the current list of items are done (see 
-docs/items_list)
+The offline documentations for all these modules can be found in the "docs" directory.
 
 INSTALLATION
 
