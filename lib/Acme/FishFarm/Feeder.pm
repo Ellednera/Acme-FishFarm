@@ -12,11 +12,11 @@ Acme::FishFarm::Feeder - Automated Feeder for Acme::FishFarm
 
 =head1 VERSION
 
-Version 0.01
+Version 1.00
 
 =cut
 
-our $VERSION = '0.01';
+our $VERSION = '1.00';
 
 
 =head1 SYNOPSIS
@@ -266,7 +266,7 @@ sub feed_fish {
     if ( $self->{current_food_amount} - $self->{feeding_volume} <= 0 ) {
         if ( $options{verbose} ) {
             print "Your feeder has run out of food, please refill as soon as possible.\n";
-            print "Only managed to feed $self->{current_food_amount} cm^3 of food to the fish.\n";        
+            print "Only managed to feed $self->{current_food_amount} cm^3 of food to the fish.\n";
         }
         $self->{current_food_amount} = 0;
     } else {
