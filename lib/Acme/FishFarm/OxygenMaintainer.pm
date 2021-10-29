@@ -7,22 +7,21 @@ use Carp "croak";
 
 =head1 NAME
 
-Acme::FishFarm::OxygenMaintainer - Installs an Oxygen Maintainer for Acme::FishFarm
+Acme::FishFarm::OxygenMaintainer - Oxygen Maintainer for Acme::FishFarm
 
 =head1 VERSION
 
-Version 0.01
+Version 1.00
 
 =cut
 
-our $VERSION = '0.01';
+our $VERSION = '1.00';
 
 
 =head1 SYNOPSIS
 
     use Acme::FishFarm::OxygenMaintainer;
-
-    my $foo = Acme::FishFarm::OxygenMaintainer->new();
+    # missing stuff will be added in the next release
 
 =head1 EXPORT
 
@@ -100,7 +99,7 @@ sub current_DO {
     
 }
 
-=head2 DO_threshold ()
+=head2 DO_threshold
 
 Returns the DO threshold.
 
@@ -125,7 +124,7 @@ sub set_DO_threshold {
 
 =head2 is_low_DO
 
-Returns true if the DO level is less than the threshold value.
+Returns C<1> if the DO level is less than the threshold value. Otherwise, returns C<0>.
 
 =cut
 
@@ -143,7 +142,7 @@ sub is_low_DO {
 
 =head2 oxygen_generation_volume
 
-Returns the oxygen generation rate to C<$new_rate>
+Returns the oxygen generation rate.
 
 =cut
 
