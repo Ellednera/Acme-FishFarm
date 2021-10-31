@@ -1,6 +1,6 @@
 package Acme::FishFarm;
 
-use 5.006;
+use 5.008;
 use strict;
 use warnings;
 use Carp "croak";
@@ -17,11 +17,11 @@ Acme::FishFarm - A Fish Farm with Automated Systems
 
 =head1 VERSION
 
-Version 1.00
+Version 1.01
 
 =cut
 
-our $VERSION = '1.00';
+our $VERSION = '1.01';
 
 
 =head1 SYNOPSIS
@@ -31,7 +31,7 @@ our $VERSION = '1.00';
     
 =head1 EXPORT
 
-The tag C<:all> can be used to import all the functions available in this module.
+The C<:all> tag can be used to import all the functions available in this module.
 
 =cut
 
@@ -52,11 +52,9 @@ our %EXPORT_TAGS = (
 
 =head2 install_all_systems
 
-Installs all the available systems with default values and returns them as a list of C<Acme::FishFarm::*> objects in the following sequence:
+Installs all the available systems the default way and returns them as a list of C<Acme::FishFarm::*> objects in the following sequence:
 
-    C<(Feeder, OxygenMaintainer, WaterConditionMonitor, WaterLevelMaintainer, WaterFiltration)>
-
-Take note that only the water condition monitor currently supports the oxygen maintainer only.
+  (Feeder, OxygenMaintainer, WaterConditionMonitor, WaterLevelMaintainer, WaterFiltration)
 
 =cut
 
@@ -102,6 +100,8 @@ Take note that there are some systems that can't be connected to the water monit
 
 =over 4
 
+=item * Acme::FishFarm::Feeder
+
 =item * Acme::FishFarm::WaterFiltration
 
 =item * Acme::FishFarm::WaterLevelMaintainer
@@ -128,7 +128,7 @@ sub consume_oxygen {
 
 This checks and outputs the condition of the current DO level.
 
-Take note that this process will also trigger the LED and buzzer if abnormal condition is present.
+Take note that this process will trigger the LED and buzzer if abnormal condition is present.
 
 Returns 1 upon success.
 =cut
@@ -155,7 +155,7 @@ sub check_DO {
 
 This checks and outputs the condition of the current pH value.
 
-Take note that this process will also trigger the LED and buzzer if abnormal condition is present.
+Take note that this process will trigger the LED and buzzer if abnormal condition is present.
 
 Returns 1 upon success.
 
@@ -183,7 +183,7 @@ sub check_pH {
 
 This checks and outputs the condition of the current temperature.
 
-Take note that this process will also trigger the LED and buzzer if abnormal condition is present.
+Take note that this process will trigger the LED and buzzer if abnormal condition is present.
 
 Returns 1 upon success.
 
@@ -211,7 +211,7 @@ sub check_temperature {
 
 This checks and outputs the condition of the current temperature.
 
-Take note that this process will also trigger the LED and buzzer if abnormal condition is present.
+Take note that this process will trigger the LED and buzzer if abnormal condition is present.
 
 Returns 1 upon success.
 
@@ -344,9 +344,9 @@ sub check_feeder {
 
 Outputs which LEDs are lighted up. Returns 1 upon success.
 
-Currently this subroutine only shows the LEDs present in C<$water_monitor> ie. C<Acme::FishFarm::WaterConditionMonitor> object. See that module for more details about the available LEDs.
+Currently this subroutine only shows the LEDs present in the  C<Acme::FishFarm::WaterConditionMonitor> object. See that module for more details about the available LEDs.
 
-More LEDs will be available in the future. You can append your own LEDs by yourself if you really need to :)
+More LEDs will be available in the future.
 
 =cut
 
@@ -453,6 +453,18 @@ L<https://metacpan.org/release/Acme-FishFarm>
 =head1 ACKNOWLEDGEMENTS
 
 Besiyata d'shmaya
+
+=head1 SEE ALSO
+
+    Acme::FishFarm::Feeder
+
+    Acme::FishFarm::OxygenMaintainer
+
+    Acme::FishFarm::WaterConditionMonitor
+
+    Acme::FishFarm::WaterFiltration
+
+    Acme::FishFarm::::WaterLevelMaintainer
 
 =head1 LICENSE AND COPYRIGHT
 
