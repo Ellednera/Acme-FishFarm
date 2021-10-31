@@ -3,3 +3,7 @@ MANIFEST.bak
 blib/
 pm_to_blib
 pod2htmd.tmp
+MYMETA.json.lock
+Acme-FishFarm-1.00.tar.gz
+Acme-FishFarm-1.00.zip
+cover_db/
