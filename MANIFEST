@@ -1,10 +1,10 @@
 Changes
-docs/Acme-FishFarm-1.00.html
-docs/Acme-FishFarm-Feeder-1.00.html
-docs/Acme-FishFarm-OxygenMaintainer-1.00.html
-docs/Acme-FishFarm-WaterConditionMonitor-1.00.html
-docs/Acme-FishFarm-WaterFiltration-1.00.html
-docs/Acme-FishFarm-WaterLevelMaintainer-1.00.html
+docs/Acme-FishFarm-1.01.html
+docs/Acme-FishFarm-Feeder-1.01.html
+docs/Acme-FishFarm-OxygenMaintainer-1.01.html
+docs/Acme-FishFarm-WaterConditionMonitor-1.01.html
+docs/Acme-FishFarm-WaterFiltration-1.01.html
+docs/Acme-FishFarm-WaterLevelMaintainer-1.01.html
 docs/items_list
 docs/specifications
 lib/Acme/FishFarm.pm
