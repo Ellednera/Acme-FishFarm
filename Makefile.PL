@@ -20,7 +20,7 @@ my %WriteMakefileArgs = (
     PREREQ_PM => {
         'Carp' => '0',
     },
-    META_MERGE => {
+    META_ADD => {
       resources => {
         repository => {
             type => 'git',
