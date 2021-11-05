@@ -11,11 +11,11 @@ Acme::FishFarm::WaterFiltration - Water Filter for Acme::FishFarm
 
 =head1 VERSION
 
-Version 1.00
+Version 1.01
 
 =cut
 
-our $VERSION = '1.00';
+our $VERSION = '1.01';
 
 
 =head1 SYNOPSIS
@@ -59,7 +59,7 @@ This is the maximum limit of waste in the cylinder. When this count is hit, it w
 
 =item reduce_waste_count_by
 
-Default is 10.
+Default is C<10>.
 
 The amount of waste to remove from the cylinder / filter each time the cleaning process is called.
 
@@ -158,7 +158,7 @@ Synonym for C<is_cylinder_dirty>. See next method.
 
 Returns C<1> if the filtering cylinder is dirty ie current waste count hits the waste count threshold. Returns C<0> otherwise.
 
-Remember to clean your cylinder ie. filter layer as soon as possible.
+Remember to clean your cylinder ie. filter layer as soon as possible if it is dirty.
 
 =cut
 
@@ -197,7 +197,7 @@ C<$reduce_waste_by> is optional. If present, it will reduce waste by that specif
 
 If C<$reduce_waste_by> is a negative value, it will be turned into a positive value with the same magnitude.
 
-Make sure that you turn on your spatula, if not this process will not do anything :)
+Make sure that you turn on the spatulas, if not this process will not do anything :) See C<turn_on_spatulas> below.
 
 =cut
 
@@ -241,17 +241,15 @@ sub clean_cylinder {
 
 Activates the cleaning mechanism ie the spatulas :)
 
-Take note that turning on the spatulas does not clean the cylinder. You need to do it explicitly. See C<clean_cylinder> method for more info :)
+Take note that turning on the spatulas does not clean the cylinder. You need to do it explicitly. See C<clean_cylinder> method above for more info :)
 
 =head2 turn_off_spatulas
 
 Deactivates the cleaning mechanism ie the spatulas :)
 
-See C<clean_cylinder> method for more info :)
-
 =head2 is_on_spatulas
 
-Returns C<1> if the spatula are turned on. The spatula will not clean the cylinder until you explicitly tell the system to do so. See C<clean_cylinder> for more info.
+Returns C<1> if the spatula are turned on. The spatula will not clean the cylinder until you explicitly tell the system to do so. See C<clean_cylinder> method above for more info.
 
 =cut
 

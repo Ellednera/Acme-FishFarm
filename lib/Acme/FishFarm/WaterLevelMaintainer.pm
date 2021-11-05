@@ -11,11 +11,11 @@ Acme::FishFarm::WaterLevelMaintainer - Water Level Maintainer for Acme::FishFarm
 
 =head1 VERSION
 
-Version 0.01
+Version 1.01
 
 =cut
 
-our $VERSION = '0.01';
+our $VERSION = '1.01';
 
 
 =head1 SYNOPSIS
@@ -38,11 +38,11 @@ The supported C<%options> are:
 
 =item current_water_level
 
-The default water level is to C<5 m>.
+The default water level is to C<5 unit>.
 
 =item low_water_level_threshold
 
-The default threshold is C<2 m>.
+The default threshold is C<2 unit>.
 
 If the current water level is lower than this threshold, then you need to pump water into the tank.
 
@@ -50,7 +50,7 @@ If the current water level is lower than this threshold, then you need to pump w
 
 This is the height of the water level to increase when the water is pumped in.
 
-The default value is C<0.5 m>.
+The default value is C<0.5 unit>.
 
 =back
 
@@ -83,7 +83,7 @@ sub install {
 
 Sets / returns the current water level of the water.
 
-C<$new_water_level> is optional. If present, the current water level will be set to C<$new_water_level>. Otherwise, returns the current water level (depth) in C<metres>.
+C<$new_water_level> is optional. If present, the current water level will be set to C<$new_water_level>. Otherwise, returns the current water level (depth).
 
 =cut
 
@@ -139,7 +139,7 @@ For the pumping mechanism, just assume that the pumps can actually pump in certa
 
 =head2 water_level_increase_height
 
-Returns the height of water level to increase each time the C<pump_water_in> is called.
+Returns the height of water level to increase each water pumping action. See C<pump_water_in> below.
 
 =cut
 
@@ -211,6 +211,7 @@ L<https://metacpan.org/release/.>
 
 =head1 ACKNOWLEDGEMENTS
 
+Besiyata d'shmaya
 
 =head1 LICENSE AND COPYRIGHT
 

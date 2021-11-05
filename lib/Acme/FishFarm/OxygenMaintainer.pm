@@ -11,11 +11,11 @@ Acme::FishFarm::OxygenMaintainer - Oxygen Maintainer for Acme::FishFarm
 
 =head1 VERSION
 
-Version 1.00
+Version 1.01
 
 =cut
 
-our $VERSION = '1.00';
+our $VERSION = '1.01';
 
 
 =head1 SYNOPSIS
@@ -54,6 +54,8 @@ This is the rate of oxygen generation.
 The default value is C<0.2 mg/L per unit time>
 
 =back
+
+The unit C<mg/L> is just a unit, it doesn't show up if you call any of it's related getters.
 
 =cut
 
@@ -166,7 +168,7 @@ sub set_oxygen_generation_volume {
 
 Pumps oxygen into the water based on the diffusion rate. The current DO value will increase every time this action is invoked.
 
-Take note that this will generate oxygen no matter what. Make sure you check the DO content before pumping oxygen into your tank. See C<is_low_DO> for more info.
+Take note that this will generate oxygen no matter what. Make sure you check the DO content before pumping oxygen into your tank. See C<is_low_DO> method above for more info.
 
 =cut
 

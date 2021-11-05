@@ -11,11 +11,11 @@ Acme::FishFarm::WaterConditionMonitor - Water Condition Monitor for Acme::FishFa
 
 =head1 VERSION
 
-Version 1.00
+Version 1.01
 
 =cut
 
-our $VERSION = '1.00';
+our $VERSION = '1.01';
 
 
 =head1 SYNOPSIS
@@ -26,6 +26,14 @@ our $VERSION = '1.00';
 =head1 EXPORT
 
 None
+
+=head1 NOTES
+
+Some of the methods in this module can be confusing expecially when it comes to checking abnormal water conditions.
+
+B<Please always always always check the water condition before checking the LEDs and buzzers status.>
+
+C<Acme::FishFarm> contains subroutines to check all the abnormal water conditions to ease this job.
 
 =head1 CREATION RELATED SUBROUTINES/METHODS
 
@@ -48,7 +56,7 @@ Optional. The default threshold range is C<[6.5, 7.5]> and the default pH is C<7
 This will set the threshold value of the water pH. Please pass in an array reference to this key
 in the form of C<[min_pH, max_pH]>
 
-The values are in the range of C<1-14>.
+The values are in the range of C<1-14>. However, this range is not checked for incorrect values.
 
 =item temperature
 
@@ -57,7 +65,7 @@ Optional. The default threshold range is C<[20, 25]> degree celcius and the defa
 This will set the threshold value of the water temperature. Please pass in an array reference to this key
 in the form of C<[min_temperature, max_temperature]>
 
-The ranges of values are between 0 and 50 degree B<celciuls>
+The ranges of values are between C<0> and C<50> degree B<celcius>. However, this range is not checked for incorrect values. The unit C<celcius> is just a unit, it doesn't show up if you call any of it's related getters.
 
 =item turbidity
 
@@ -65,7 +73,7 @@ Optional. The default threshold is C<180 ntu> and the default turbidity is set t
 
 This will set the threshold of the turbidity of the water.
 
-The range of values are between 0 and 300 ntu.
+The range of values are between C<0 ntu> and C<300 ntu>. However, this range is not checked for incorrect values. The unit C<ntu> is just a unit, it doesn't show up if you call any of it's related getters.
 
 =back
 
@@ -106,7 +114,7 @@ sub install {
 
 =head2 add_oxygen_maintainer ( $oxygen_maintainer )
 
-Connects the oxygen maintainer to this monitoring system.
+Connects the oxygen maintainer ie C<Acme::FishFarm::OxygenMaintainer> system to this monitoring system.
 
 For now, this module can only check if the oxygen is lacking or not. This module contains a user friendly method compared to the standard terminology used in the C<Acme::FishFarm::OxygenMaintainer> module. Other user friendly methods will be added in the future.
 
@@ -168,9 +176,10 @@ sub set_ph_threshold {
 
 Returns true if the current pH is within the set range of threshold.
 
-The pH LED will light up and a short buzzer will be turned on if the pH is not normal.
+The pH LED will light up and a short buzzer will be turned on if B<only> the pH is not normal.
 
-The long buzzer will not be affected, you'll need to turn it on yourself.
+Don't worry about the long buzzer as it will be taken care of behind the scene.
+
 =cut
 
 sub ph_is_normal {
@@ -222,7 +231,7 @@ sub temperature_threshold {
     $self->{temperature_range};
 }
 
-=head2 set_temperature_threshold ( $celcius )
+=head2 set_temperature_threshold ( $new_temperature )
 
 Sets the water temperature threshold.
 
@@ -239,6 +248,10 @@ sub set_temperature_threshold {
 =head2 temperature_is_normal
 
 Returns true if the current temperature is within the set range of threshold.
+
+The temperature LED will light up and a short buzzer will be turned on if B<only> the temperature is not normal.
+
+Don't worry about the long buzzer as it will be taken care of behind the scene.
 
 =cut
 
@@ -264,7 +277,7 @@ sub temperature_is_normal {
 
 =head2 lacking_oxygen
 
-Returns true if the current DO content is lower then the threshold.
+Returns true if the current DO content is lower than the threshold.
 
 =cut
 
@@ -333,6 +346,10 @@ sub set_turbidity_threshold {
 
 Returns true if the current turbidity is highter then the threshold.
 
+The turbidity LED will light up and a short buzzer will be turned on if B<only> the turbidity is not normal.
+
+Don't worry about the long buzzer as it will be taken care of behind the scene.
+
 =cut
 
 sub water_dirty {
@@ -363,7 +380,7 @@ sub water_dirty {
 
 Returns true if the short buzzer is turned on.
 
-A short buzzer will buzz if there is 1 abnormal condition. If more than 1 abnormal conditions are present, the long buzzer will be turned on and this short buzzer will be turned off so that it's not too noisy :)
+A short buzzer will buzz ie turned on if there is 1 abnormal condition. If more than 1 abnormal conditions are present, the long buzzer will be turned on and this short buzzer will be turned off so that it's not too noisy :)
 
 =cut
 
@@ -392,7 +409,7 @@ sub is_on_buzzer_long {
 
 =item &_tweak_buzzers ( $self )
 
-Tweak the buzzers. It's either the short buzzer or the long buzzer switched on only.
+Tweak the buzzers. It's either the short buzzer or the long buzzer switched on only. This subroutine will be called whenever a condition checking method is called in order to update the buzzers status.
 
 =back
 
@@ -424,8 +441,7 @@ sub _tweak_buzzers {
 
 =head1 LED LIGHTS RELATED SUBROUTINES/METHODS
 
-An LED is lighted up if the corresponding parameter are in an abnormal state.
-This action is to be done in through the main script.
+An LED is lighted up if the corresponding parameter is in abnormal state.
 
 =head2 on_LED_pH
 
