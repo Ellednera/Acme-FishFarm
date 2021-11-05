@@ -26,12 +26,54 @@ our $VERSION = '1.01';
 
 =head1 SYNOPSIS
 
-    use Acme::FishFarm;
-    # missing stuff will be added in the next release
+    use 5.010;
+
+    use Acme::FishFarm ":all";
+
+    my $water_monitor = Acme::FishFarm::WaterConditionMonitor->install;
+    my $oxygen = Acme::FishFarm::OxygenMaintainer->install( DO_generation_volume => 1.92 );
+
+    $water_monitor->add_oxygen_maintainer( $oxygen );
+
+    say "Water condition monitor installed...";
+    say "Oxygen maintainer installed and connected to water condition monitor...";
+    say "Water condition monitor switched on!";
+    say "";
+
+    while ( "fish are swimming happily" ) {
+        ### DO
+        check_DO( $oxygen, reduce_precision( rand(8) ) );
+        say "";
+        
+        ### pH
+        check_pH( $water_monitor, 6.912 );
+        #check_pH( $water_monitor, 5.9 );
+        say "" ;
+        
+        ## temperature
+        #check_temperature( $water_monitor, 23 );
+        check_temperature( $water_monitor, 26 );
+        say "";
+        
+        ## turbidity
+        check_turbidity( $water_monitor, 120 );
+        #check_turbidity( $water_monitor, 190 );
+        say "";
+        
+        # all LEDs
+        render_leds( $water_monitor );
+        say "";
+        
+        # buzzers
+        render_buzzer( $water_monitor );
+        
+        sleep(3);
+        say "-----------------------------";
+    }
     
 =head1 EXPORT
 
-The C<:all> tag can be used to import all the functions available in this module.
+The C<:all> tag can be used to import all the subroutines available in this module.
 
 =cut
 
@@ -47,6 +89,10 @@ our %EXPORT_TAGS = (
                  check_turbidity check_water_filter check_water_level check_feeder render_leds 
                  render_buzzer ) ],
 );
+
+=head1 NOTES
+
+Almost all the subroutines in this module will give output. The unit measurements used will be according to the ones mentioned in C<Acme::FishFarm::WaterConditionMonitor>.
 
 =head1 SYSTEM INSTALLATION RELATED SUBROUTINES
 
@@ -302,7 +348,7 @@ sub check_water_level {
 
 This checks, performs necessary actions and outputs the condition of the feeder. Each call will tick the clock inside the feeder. See C<Acme::FishFarm::Feeder> for more info.
 
-If the food tank is empty, it will be filled to the default. So if you want to fill a different amount, please set the amount before hand. See <Acme::FishFarm::Feeder>.
+If the food tank is empty, it will be filled to the default. So if you want to fill a different amount, please set the amount before hand. See C<Acme::FishFarm::Feeder>.
 
 Setting C<$verbose> to 1 will give more output about the empty food tank.
 

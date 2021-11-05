@@ -20,8 +20,37 @@ our $VERSION = '1.01';
 
 =head1 SYNOPSIS
 
+    use 5.010;
+
+    use Acme::FishFarm qw( reduce_precision );
     use Acme::FishFarm::WaterFiltration;
-    # missing stuff will be added in the next release
+
+    my $water_filter = Acme::FishFarm::WaterFiltration->install;
+
+    say "Water filter installed and switched on!\n";
+
+
+    my $current_reading;
+    my $waste_count_threshold;
+    
+    while ( "Fish are living under the water..." ) {
+        $water_filter->current_waste_count( reduce_precision ( rand(100) ) );
+        
+        $current_reading = $water_filter->current_waste_count;
+        $waste_threshold = $water_filter->waste_count_threshold;
+        
+        print "Current Waste Count: ", $current_reading, " (high: >= ", $waste_threshold, ")\n";
+
+        if ( $water_filter->is_cylinder_dirty ) {
+            print "  !! Filtering cylinder is dirty!\n";
+            print "  Cleaned the filter!\n";
+            $water_filter->clean_cylinder;
+        } else {
+            print "  Filtering cylinder is still clean.\n";
+        }
+        sleep(1);
+        say "";
+    }
 
 =head1 EXPORT
 

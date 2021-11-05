@@ -20,8 +20,34 @@ our $VERSION = '1.01';
 
 =head1 SYNOPSIS
 
+    use 5.010;
+
+    use Acme::FishFarm qw(consume_oxygen reduce_precision);
     use Acme::FishFarm::OxygenMaintainer;
-    # missing stuff will be added in the next release
+
+    my $oxygen = Acme::FishFarm::OxygenMaintainer->install( DO_generation_volume => 3 );
+    say "Oxygen maintainer installed!\n";
+
+
+    while ( "fish are using up oxygen" ) {
+        say "Current Oxygen Level: ", $oxygen->current_DO, " mg/L",
+            " (low: < ", $oxygen->DO_threshold, ")";
+        #say "Low Oxygen Level: ", $oxygen->DO_threshold, " mg/L";
+
+        if ( $oxygen->is_low_DO ) {
+            say "Fish status: Suffocating";
+            say "  !! Low oxygen level!";
+            say "Pumping ", $oxygen->oxygen_generation_volume, " mg/L of oxygen into the water..." ;
+            $oxygen->generate_oxygen;
+        } else {
+            say "Fish status: Happy";
+        }
+        
+        consume_oxygen( $oxygen, rand(2.5) );
+        
+        sleep(3);
+        say "";
+    }
 
 =head1 EXPORT
 

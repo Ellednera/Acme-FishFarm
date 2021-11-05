@@ -20,8 +20,32 @@ our $VERSION = '1.01';
 
 =head1 SYNOPSIS
 
+    use 5.010;
+
     use Acme::FishFarm::WaterConditionMonitor;
-    # missing stuff will be added in the next release
+    use Acme::FishFarm::OxygenMaintainer;
+
+    my $water_monitor = Acme::FishFarm::WaterConditionMonitor->install;
+    my $oxygen = Acme::FishFarm::OxygenMaintainer->install( DO_generation_volume => 1.92 );
+
+    $water_monitor->add_oxygen_maintainer( $oxygen );
+    
+    # always check water conditions before checking LEDs and buzzers
+    # also, these four method will return 1 or 0, upon calling them, the status of LEDs and buzzers will also be updated
+    $water_monitor->ph_is_normal;
+    $water_monitor->temperature_is_normal;
+    $water_monitor->lacking_oxygen;
+    $water_monitor->water_dirty;
+    
+    if ( $water_monitor->is_on_LED_DO ) {
+        # do something, same goes to the rest of the LEDs
+    }
+
+    if ( $water_monitor->is_on_buzzer_short ) {
+        # do something
+    } elsif ( $water_monitor->is_on_buzzer_long ) {
+        # do something
+    }
 
 =head1 EXPORT
 
