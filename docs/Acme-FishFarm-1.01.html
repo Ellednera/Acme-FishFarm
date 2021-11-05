@@ -16,6 +16,7 @@
   <li><a href="#VERSION">VERSION</a></li>
   <li><a href="#SYNOPSIS">SYNOPSIS</a></li>
   <li><a href="#EXPORT">EXPORT</a></li>
+  <li><a href="#NOTES">NOTES</a></li>
   <li><a href="#SYSTEM-INSTALLATION-RELATED-SUBROUTINES">SYSTEM INSTALLATION RELATED SUBROUTINES</a>
     <ul>
       <li><a href="#install_all_systems">install_all_systems</a></li>
@@ -54,17 +55,63 @@
 
 <h1 id="VERSION">VERSION</h1>
 
-<p>Version 1.00</p>
+<p>Version 1.01</p>
 
 <h1 id="SYNOPSIS">SYNOPSIS</h1>
 
-<pre><code>    use Acme::FishFarm;
-    # missing stuff will be added in the next release
+<pre><code>    use 5.010;
+
+    use Acme::FishFarm &quot;:all&quot;;
+
+    my $water_monitor = Acme::FishFarm::WaterConditionMonitor-&gt;install;
+    my $oxygen = Acme::FishFarm::OxygenMaintainer-&gt;install( DO_generation_volume =&gt; 1.92 );
+
+    $water_monitor-&gt;add_oxygen_maintainer( $oxygen );
+
+    say &quot;Water condition monitor installed...&quot;;
+    say &quot;Oxygen maintainer installed and connected to water condition monitor...&quot;;
+    say &quot;Water condition monitor switched on!&quot;;
+    say &quot;&quot;;
+
+    while ( &quot;fish are swimming happily&quot; ) {
+        ### DO
+        check_DO( $oxygen, reduce_precision( rand(8) ) );
+        say &quot;&quot;;
+        
+        ### pH
+        check_pH( $water_monitor, 6.912 );
+        #check_pH( $water_monitor, 5.9 );
+        say &quot;&quot; ;
+        
+        ## temperature
+        #check_temperature( $water_monitor, 23 );
+        check_temperature( $water_monitor, 26 );
+        say &quot;&quot;;
+        
+        ## turbidity
+        check_turbidity( $water_monitor, 120 );
+        #check_turbidity( $water_monitor, 190 );
+        say &quot;&quot;;
+        
+        # all LEDs
+        render_leds( $water_monitor );
+        say &quot;&quot;;
+        
+        # buzzers
+        render_buzzer( $water_monitor );
+        
+        sleep(3);
+        say &quot;-----------------------------&quot;;
+    }
     </code></pre>
 
 <h1 id="EXPORT">EXPORT</h1>
 
-<p>The <code>:all</code> tag can be used to import all the functions available in this module.</p>
+<p>The <code>:all</code> tag can be used to import all the subroutines available in this module.</p>
+
+<h1 id="NOTES">NOTES</h1>
+
+<p>Almost all the subroutines in this module will give output. The unit measurements used will be according to the ones mentioned in <code>Acme::FishFarm::WaterConditionMonitor</code>.</p>
 
 <h1 id="SYSTEM-INSTALLATION-RELATED-SUBROUTINES">SYSTEM INSTALLATION RELATED SUBROUTINES</h1>
 
@@ -161,7 +208,7 @@
 
 <p>This checks, performs necessary actions and outputs the condition of the feeder. Each call will tick the clock inside the feeder. See <code>Acme::FishFarm::Feeder</code> for more info.</p>
 
-<p>If the food tank is empty, it will be filled to the default. So if you want to fill a different amount, please set the amount before hand. See &lt;Acme::FishFarm::Feeder&gt;.</p>
+<p>If the food tank is empty, it will be filled to the default. So if you want to fill a different amount, please set the amount before hand. See <code>Acme::FishFarm::Feeder</code>.</p>
 
 <p>Setting <code>$verbose</code> to 1 will give more output about the empty food tank.</p>
 
